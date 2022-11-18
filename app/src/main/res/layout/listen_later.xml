@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LikedSong"
+    android:background="@color/black"
+    >
+    <RelativeLayout
+        android:paddingHorizontal="20dp"
+        android:id="@+id/like_song"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+
+        >
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/arrow_back"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:contentDescription="@string/menu_icon_desc"
+            android:src="@drawable/back_icon" />
+
+        <RelativeLayout
+            android:layout_toEndOf="@+id/arrow_back"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/listen_later"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/toggle_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/like_song"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="40dp">
+
+        <TextView
+            android:id="@+id/option_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/option_selected"
+            android:textColor="@color/silver_300"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/option_selected"
+            android:background="@drawable/brown_round_button"
+            android:padding="5dp"
+            android:weightSum="1">
+
+            <ToggleButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight=".5"
+                android:background="@drawable/brown_round_button"
+                android:textAllCaps="false"
+                android:textColor="@color/orange"
+                android:textOff="@string/playlist"
+                android:textOn="@string/playlist"
+                android:textStyle="bold" />
+
+            <ToggleButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_weight=".5"
+                android:background="@drawable/round_button"
+                android:text="@string/music"
+                android:textAllCaps="false"
+                android:textOff="@string/music"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/list_song_1"
+        android:layout_marginHorizontal="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toggle_menu"
+        android:layout_marginTop="40dp"
+        android:weightSum="1"
+        android:baselineAligned="false">
+        <RelativeLayout
+            android:layout_weight=".7"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            >
+            <ImageView
+                android:id="@+id/artists_icon"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/artist_icon_desc"
+                android:src="@drawable/artist_2" />
+
+            <LinearLayout
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/artists_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/song_name"
+                    android:textColor="@color/white"
+                    />
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/artists"
+                    android:textColor="@color/orange"
+                    />
+
+            </LinearLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_weight=".3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            >
+
+            <TextView
+                android:layout_marginBottom="10dp"
+                android:id="@+id/time_elapse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="@string/time_elapse_1"
+                android:textColor="@color/white" />
+            <ImageView
+                android:contentDescription="@string/menu_icon_desc_1"
+                android:layout_toEndOf="@+id/time_elapse"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/menu_icon"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginHorizontal="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/list_song_1"
+        android:layout_marginTop="20dp"
+        android:weightSum="1"
+        android:baselineAligned="false">
+
+        <RelativeLayout
+            android:layout_weight=".7"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            >
+            <ImageView
+                android:id="@+id/artists_icon_2"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/artist_icon_desc"
+                android:src="@drawable/artist_2" />
+
+            <LinearLayout
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/artists_icon_2"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/song_name"
+                    android:textColor="@color/white"
+                    />
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/artists"
+                    android:textColor="@color/orange"
+                    />
+
+            </LinearLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_weight=".3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            >
+
+            <TextView
+                android:layout_marginBottom="10dp"
+                android:id="@+id/time_elapse_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="@string/time_elapse_2"
+                android:textColor="@color/white" />
+            <ImageView
+                android:contentDescription="@string/menu_icon_desc_1"
+                android:layout_toEndOf="@+id/time_elapse_2"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/menu_icon"
+                />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/silver_lite"
+        android:paddingVertical="10dp"
+        app:itemIconTint="@drawable/state_selector"
+        app:itemTextColor="@drawable/state_selector"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_menu"
+        android:id="@+id/bottom_menu"
+        />
+</RelativeLayout>

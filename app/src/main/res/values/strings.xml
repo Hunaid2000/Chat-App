@@ -1,0 +1,151 @@
+<resources>
+    <string name="app_name">i192008_i192043</string>
+
+    <!-- Screen-2:: Sign Up Screen Strings    /-->
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="app_named">Musify</string>
+    <string name="app_logo_description">App Logo</string>
+    <string name="name">Name</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="bio">Bio</string>
+    <string name="image_desc">Image desc</string>
+    <string name="upload_profile">Upload Profile</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="show">show</string>
+    <string name="gender">Gender</string>
+    <string name="gender_image_male">Male</string>
+    <string name="gender_image_female">Female</string>
+    <string name="call_to_action">I would like to receive your newsletter and other promotional information.</string>
+
+    <!-- Screen-3:: Sign In Screen Strings   -->
+    <string name="forget_password">Forget your password?</string>
+
+    <!-- Screen-4:: Account login Screen Strings   -->
+    <string name="google_account">Continue with Google</string>
+    <string name="facebook_account">Continue with Facebook</string>
+    <string name="create_account">Create Account</string>
+    <!-- bottom navigation Activity   -->
+    <string name="like">Liked</string>
+    <string name="add">Add</string>
+    <string name="search">Search</string>
+    <string name="listen_later">Listen Later</string>
+    <!-- main screen string    -->
+    <string name="menu_icon_desc">Menu Icon </string>
+    <string name="person_icon_desc">Person Icon</string>
+    <string name="song_icon_desc">Song Icon</string>
+    <string name="playlist">Playlists</string>
+    <string name="playlist_1">Playlist 1</string>
+    <string name="playlist_2">Playlist 2</string>
+    <string name="playlist_3">Playlist 3</string>
+    <string name="playlist_4">Playlist 4</string>
+    <string name="playlist_5">Playlist 5</string>
+    <string name="playlist_6">Playlist 6</string>
+
+    <!-- Artist name    -->
+    <string name="artists">Artists</string>
+    <string name="artist_icon_desc">Artist picture</string>s
+    <string name="artists_1">Artists 1</string>
+    <string name="artists_2">Artists 2</string>
+    <string name="artists_3">Artists 3</string>
+    <string name="artists_4">Artists 4</string>
+    <string name="artists_5">Artists 5</string>
+    <string name="artists_6">Artists 6</string>
+
+    <!-- Song Example strings    -->
+    <string name="song_name">Song Name</string>
+    <string name="play_icon">Play Icon</string>
+    <string name="left_icon">Left Icon</string>
+    <string name="right_icon">Right Icon</string>
+
+    <!-- Screen-7 Strings  -->
+    <string name="song_tittle">Song Title</string>
+    <string name="song_artist">By Artist</string>
+    <string name="person_comment">What an amazing song</string>
+
+    <!-- Screen-8 Strings   -->
+    <string name="user_name">Username</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="logout">Log out</string>
+
+    <!-- Screen-9 Strings    -->
+    <string name="add_playlist">Add Playlist</string>
+    <string name="upload_icon_desc">Upload Icon</string>
+    <string name="playlist_name">Playlist Name</string>
+    <string name="playlist_desc">Description</string>
+
+    <!-- Screen-10 Strings   -->
+    <string name="Upload_music">Upload Music</string>
+    <string name="next">Next</string>
+    <string name="title">Title</string>
+    <string name="genre">Genre</string>
+    <string name="song_upload">Upload</string>
+    <string name="song_record">Record</string>
+
+    <!-- Screen-11 strings    -->
+    <string name="record_music">Record</string>
+
+    <!--  Screen-12 strings  -->
+    <string name="time_record">2:45</string>
+
+    <!-- Screen-13 string    -->
+    <string name="remaining_time">00:00</string>
+    <string name="stop_icon_desc">Stop Icon</string>
+
+    <!-- Screen-14 Strings    -->
+    <string name="status_bar_desc">Status bar Icon</string>
+    <string name="status_bar_text">1:00 /2:45</string>
+
+    <!-- Screen-15 Strings   -->
+    <string name="select_playlist">Select Playlist</string>
+    <string name="skip_selection">Skip</string>
+
+    <!-- Screen-16 Strings    -->
+    <string name="like_icon_desc">Like Song</string>
+    <string name="down_icon_desc">Download Song</string>
+    <string name="list_playlist_icon_desc">List Playlists</string>
+    <string name="comment_icon_desc">Add a Review</string>
+
+    <!-- Screen-17 strings    -->
+    <string name="triangle_icon_desc">Triangle Icon</string>
+    <string name="time_lapse">1:25</string>
+
+    <!-- Screen-18 Strings    -->
+    <string name="cancel_icon_desc">Cancel Icon</string>
+    <string name="recent_search">Recent Searches</string>
+    <string name="search_song_hint">Search</string>
+
+    <!-- Screen-20 Strings    -->
+    <string name="track_1">Track: 8</string>
+    <string name="track_2">Track: 3</string>
+
+    <!--  Screen-21 Strings  -->
+    <string name="Like_song">Liked</string>
+    <string name="music">Music</string>
+    <string name="option_selected">2 Options / Right Selected</string>
+    <string name="time_elapse_1">3.01</string>
+    <string name="time_elapse_2">0.24</string>
+    <string name="menu_icon_desc_1">Menu Icon</string>
+
+    <!-- Screen-22 Screens    -->
+    <string name="view_profile">Profile</string>
+    <string name="playlist_count">Playlists: 4</string>
+    <string name="song_count">Song: 4</string>
+
+
+    <!-- Screen-23 Strings    -->
+    <string name="save_profile">Save</string>
+    <string name="back_icon_desc">Back Icon</string>
+    <string name="edit_value">Edit</string>
+    <string name="hint_password">*******</string>
+    <string name="hint_email">abcd@gmail.com</string>
+
+    <!-- Some other string    -->
+    <string name="music_list">Music List</string>
+    <string name="forget_email">Enter your Email</string>
+    <string  name="submit">Submit</string>
+</resources>

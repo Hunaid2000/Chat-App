@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".playsongActivity"
+    >
+
+    <RelativeLayout
+        android:id="@+id/Add_PlayList"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:paddingHorizontal="20dp">
+
+        <ImageView
+            android:id="@+id/arrow_back"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
+            android:contentDescription="@string/menu_icon_desc"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@+id/arrow_back"
+            android:text="@string/music_list"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+    <ListView
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/Add_PlayList"
+        android:layout_above="@id/jc_player"
+        android:layout_marginVertical="20dp"
+        android:id="@+id/playlist_holder"
+        android:choiceMode="singleChoice"
+        android:listSelector="@color/orange"
+        />
+
+    <com.example.jean.jcplayer.view.JcPlayerView
+        android:id="@+id/jc_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/orange"
+        android:visibility="gone"
+        />
+</RelativeLayout>

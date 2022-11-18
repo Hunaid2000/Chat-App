@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".AddPlaylist"
+    >
+    <RelativeLayout
+        android:padding="20dp"
+        android:id="@+id/Add_PlayList"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <ImageView
+            android:id="@+id/arrow_back"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
+            android:contentDescription="@string/menu_icon_desc"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/arrow_back"
+            android:text="@string/add_playlist"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/upload_container"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/Add_PlayList"
+        android:padding="20sp"
+        tools:ignore="UselessParent">
+
+        <RelativeLayout
+            android:id="@+id/upload_playlistIcon"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@drawable/round_upload" />
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/upload_icon_desc"
+            android:src="@drawable/upload_icon"
+            android:id="@+id/shit_design"
+
+            />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/playlist_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/upload_container"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/rectangle_button"
+        android:hint="@string/playlist_name"
+        android:inputType="text"
+        android:paddingHorizontal="10dp"
+        android:textColor="@color/orange"
+        android:textColorHint="@color/orange"
+        android:textSize="20sp"
+        tools:ignore="Autofill" />
+
+    <EditText
+        android:id="@+id/playlist_desc"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_below="@id/playlist_name"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rectangle_button"
+        android:hint="@string/playlist_desc"
+        android:inputType="text"
+        android:paddingHorizontal="10dp"
+        android:textColor="@color/orange"
+        android:textColorHint="@color/orange"
+        android:textSize="20sp"
+        tools:ignore="Autofill" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/add_playlist"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@id/playlist_desc"
+        android:layout_alignParentEnd="true"
+        android:layout_marginVertical="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/round_button"
+        android:paddingHorizontal="30dp"
+        android:text="@string/add_playlist"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/silver_lite"
+        android:paddingVertical="10dp"
+        app:itemIconTint="@drawable/state_selector"
+        app:itemTextColor="@drawable/state_selector"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_menu"
+        android:id="@+id/bottom_menu"
+        />
+</RelativeLayout>

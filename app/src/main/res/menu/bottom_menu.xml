@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/favorite"
+        android:icon="@drawable/heart_icon"
+        android:title="@string/like"
+        />
+    <item
+        android:id="@+id/add"
+        android:icon="@drawable/icon_add"
+        android:title="@string/add"
+        />
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/search_icon"
+        android:title="@string/search"
+        />
+    <item
+        android:id="@+id/watchLater"
+        android:icon="@drawable/time_icon"
+        android:title="@string/listen_later"
+        app:showAsAction="withText"
+        />
+</menu>
