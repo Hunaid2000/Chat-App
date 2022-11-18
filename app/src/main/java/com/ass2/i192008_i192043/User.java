@@ -1,13 +1,35 @@
 package com.ass2.i192008_i192043;
 
 public class User {
-    String firstName;
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+
     String lastName;
+    String firstName;
+    String userId;
+    String name;
     String email;
     String password;
+    String phno;
     String bio;
     String profileUrl;
     String gender;
+    String status;
+    String lastSeen;
 
     public static User currentUser;
 
@@ -16,14 +38,6 @@ public class User {
     }
     static public void setCurrentUser(User instance){
         currentUser = instance;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public void setEmail(String email) {
@@ -46,14 +60,6 @@ public class User {
         this.gender = gender;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -74,7 +80,43 @@ public class User {
         return gender;
     }
 
+    public String getName() {
+        return name;
+    }
 
-    // getter and setter
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(String lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getPhno() {
+        return phno;
+    }
+
+    public void setPhno(String phno) {
+        this.phno = phno;
+    }
 }

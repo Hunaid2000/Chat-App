@@ -102,8 +102,7 @@ public class SignupActivity extends AppCompatActivity {
                 if (ValidateInput()) {
                     // save the user to local storage sqlite
                     User user = new User();
-                    user.setFirstName(firstName.getText().toString());
-                    user.setLastName(lastName.getText().toString());
+                    user.setName(firstName.getText().toString());
                     user.setGender(str);
                     user.setBio(bio.getText().toString());
                     FirebaseStorage storage;
@@ -135,8 +134,7 @@ public class SignupActivity extends AppCompatActivity {
                                                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                                                 Map<String, Object> user1 = new HashMap<>();
                                                                 user.setProfileUrl(dpp.toString());
-                                                                user1.put("firstName", user.getFirstName());
-                                                                user1.put("lastName", user.getLastName());
+                                                                user1.put("firstName", user.getName());
                                                                 user1.put("gender", user.getGender());
                                                                 user1.put("bio", user.getBio());
                                                                 // save user1 to db

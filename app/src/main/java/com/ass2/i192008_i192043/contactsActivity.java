@@ -111,11 +111,11 @@ public class contactsActivity extends AppCompatActivity {
     private void addContactDailogbox() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add Contact");
-        builder.setMessage("Enter the email of the user you want to add");
-        EditText email = new EditText(this);
-        builder.setView(email);
+        builder.setMessage("Enter the Contact Number of the user you want to add");
+        EditText contact_no = new EditText(this);
+        builder.setView(contact_no);
         builder.setPositiveButton("Add", (dialog, which) -> {
-            String emailStr = email.getText().toString();
+            String emailStr = contact_no.getText().toString();
             if (emailStr.isEmpty()) {
                 Toast.makeText(this, "Please enter an email", Toast.LENGTH_SHORT).show();
             } else {
