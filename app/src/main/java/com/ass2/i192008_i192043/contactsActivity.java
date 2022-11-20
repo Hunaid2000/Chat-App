@@ -115,31 +115,31 @@ public class contactsActivity extends AppCompatActivity {
         EditText contact_no = new EditText(this);
         builder.setView(contact_no);
         builder.setPositiveButton("Add", (dialog, which) -> {
-            String emailStr = contact_no.getText().toString();
-            if (emailStr.isEmpty()) {
+            String phno = contact_no.getText().toString();
+            if (phno.isEmpty()) {
                 Toast.makeText(this, "Please enter contact number", Toast.LENGTH_SHORT).show();
             } else {
-                db.collection("users").get().addOnCompleteListener(task1 -> {
-                    if (task1.isSuccessful()) {
-                        for (DocumentSnapshot document : task1.getResult()) {
-                            String email_user = document.getString("email");
-                            if (email_user.equals(emailStr)) {
-                                String contactUid = document.getId();
-                                Contact contact = new Contact();
-                                contact.setEmail(emailStr);
-                                contact.setName(document.getString("firstName"));
-                                contact.setBio(document.getString("bio"));
-                                contact.setGender(document.getString("gender"));
-                                contact.setProfileUrl(document.getId());
-                                db.collection("users").document(uid).collection("contacts").document(contactUid).set(contact);
-                                contacts.add(contact);
-                                adapter.notifyDataSetChanged();
-                                Toast.makeText(this, "Contact added successfully", Toast.LENGTH_SHORT).show();
-
-                            }
-                        }
-                    }
-                });
+//                db.collection("users").get().addOnCompleteListener(task1 -> {
+//                    if (task1.isSuccessful()) {
+//                        for (DocumentSnapshot document : task1.getResult()) {
+//                            String email_user = document.getString("email");
+//                            if (email_user.equals(emailStr)) {
+//                                String contactUid = document.getId();
+//                                Contact contact = new Contact();
+//                                contact.setEmail(emailStr);
+//                                contact.setName(document.getString("firstName"));
+//                                contact.setBio(document.getString("bio"));
+//                                contact.setGender(document.getString("gender"));
+//                                contact.setProfileUrl(document.getId());
+//                                db.collection("users").document(uid).collection("contacts").document(contactUid).set(contact);
+//                                contacts.add(contact);
+//                                adapter.notifyDataSetChanged();
+//                                Toast.makeText(this, "Contact added successfully", Toast.LENGTH_SHORT).show();
+//
+//                            }
+//                        }
+//                    }
+//                });
             }
         });
 

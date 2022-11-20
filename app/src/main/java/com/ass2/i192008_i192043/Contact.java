@@ -9,7 +9,6 @@ public class Contact extends User{
 
     public void setUser(User user){
         this.name = user.name;
-        this.email = user.email;
         this.password = user.password;
         this.bio = user.bio;
         this.profileUrl = user.profileUrl;

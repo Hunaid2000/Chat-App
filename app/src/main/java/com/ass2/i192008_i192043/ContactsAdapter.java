@@ -42,7 +42,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String contactName = contactsList.get(position).getFirstName() + " " + contactsList.get(position).getLastName();
+        String contactName = contactsList.get(position).getName();
         String contactTime = contactsList.get(position).getLastSeen();
         String contactImg = contactsList.get(position).getProfileUrl();
         getLastMessage(contactImg, holder.contactLastMsg, holder.contactTime);

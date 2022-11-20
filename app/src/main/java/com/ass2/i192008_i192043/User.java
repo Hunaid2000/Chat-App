@@ -3,7 +3,6 @@ package com.ass2.i192008_i192043;
 public class User {
     String userId;
     String name;
-    String email;
     String password;
     String phno;
     String bio;
@@ -15,14 +14,13 @@ public class User {
     public static User currentUser;
 
      static public User getCurrentUser(){
+        if(currentUser==null){
+            currentUser=new User();
+        }
         return currentUser;
     }
     static public void setCurrentUser(User instance){
         currentUser = instance;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public void setPassword(String password) {
@@ -39,10 +37,6 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getPassword() {

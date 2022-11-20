@@ -2,10 +2,13 @@ package com.ass2.i192008_i192043;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -42,12 +45,15 @@ import com.google.firebase.storage.StorageReference;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class SignupActivity extends AppCompatActivity {
-    EditText name, phno, email, password, bio;
+    EditText name, phno, password, bio;
     String gender = "";
     RelativeLayout genderImage1, genderImage2, genderImage3;
     AppCompatButton signupButton;
@@ -59,8 +65,6 @@ public class SignupActivity extends AppCompatActivity {
     TextView showPassword;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +72,6 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         name = findViewById(R.id.name);
         phno = findViewById(R.id.phno);
-        email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         bio = findViewById(R.id.bio);
 
@@ -104,7 +107,6 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Context context = getApplicationContext();
-
                 if (dpp == null) {
                     Toast toast = Toast.makeText(context, "Please Select the profile picture", Toast.LENGTH_SHORT);
                     toast.show();
@@ -116,7 +118,6 @@ public class SignupActivity extends AppCompatActivity {
                     user.setGender(gender);
                     user.setBio(bio.getText().toString());
                     user.setPhno(phno.getText().toString());
-                    user.setEmail(email.getText().toString());
                     user.setPassword(password.getText().toString());
 
                     StringRequest request=new StringRequest(
@@ -129,7 +130,9 @@ public class SignupActivity extends AppCompatActivity {
                                     JSONObject obj=new JSONObject(response);
                                     if(obj.getInt("code")==1)
                                     {
-                                        Toast.makeText(SignupActivity.this, obj.getString("msg"), Toast.LENGTH_SHORT).show();
+                                        user.setUserId(String.valueOf(obj.getInt("id")));
+                                        uploadUserImage(user.getUserId());
+
                                     }
                                     else{
                                         Toast.makeText(SignupActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -153,82 +156,15 @@ public class SignupActivity extends AppCompatActivity {
                             Map<String, String> params=new HashMap<>();
                             params.put("name",name.getText().toString());
                             params.put("phoneNumber",phno.getText().toString());
-                            params.put("email",email.getText().toString());
                             params.put("password",password.getText().toString());
                             params.put("gender",gender);
                             params.put("bio",bio.getText().toString());
                             return params;
                         }
                     };
-                    RequestQueue queue= Volley.newRequestQueue(SignupActivity.this);
+                    RequestQueue queue = Volley.newRequestQueue(SignupActivity.this);
                     queue.add(request);
 
-                    /*FirebaseStorage storage;
-                    StorageReference storageReference;
-                    storage = FirebaseStorage.getInstance();
-                    storageReference = storage.getReference();
-
-                    // create a user in firebase
-                    mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
-                            .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d("TAG", "createUserWithEmail:success");
-                                        User = mAuth.getCurrentUser();
-                                        String gender= "";
-                                        // upload the image to firebase storage
-                                        StorageReference ref = storageReference.child("images/" + User.getUid());
-                                        ref.putFile(dpp)
-                                                .addOnSuccessListener(new OnSuccessListener<com.google.firebase.storage.UploadTask.TaskSnapshot>() {
-                                                    @Override
-                                                    public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-                                                        // Get a URL to the uploaded content
-                                                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                            @Override
-                                                            public void onSuccess(Uri uri) {
-                                                                // save the user to firebase firestore
-                                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                                                Map<String, Object> user1 = new HashMap<>();
-                                                                user.setProfileUrl(dpp.toString());
-                                                                user1.put("firstName", user.getName());
-                                                                user1.put("gender", user.getGender());
-                                                                user1.put("bio", user.getBio());
-                                                                // save user1 to db
-                                                                db.collection("users").document(User.getUid())
-                                                                        .set(user1)
-                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                            @Override
-                                                                            public void onSuccess(Void aVoid) {
-                                                                                Log.d("TAG", "DocumentSnapshot successfully written!");
-                                                                                Intent intent = new Intent(SignupActivity.this, MainplayersActivity.class);
-                                                                                startActivity(intent);
-                                                                            }
-                                                                        })
-                                                                        .addOnFailureListener(new OnFailureListener() {
-                                                                            @Override
-                                                                            public void onFailure(@NonNull Exception e) {
-                                                                                Log.w("TAG", "Error writing document", e);
-                                                                            }
-                                                                        });
-                                                            }
-                                                        });
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception exception) {
-                                                    }
-                                                });
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                                        Toast.makeText(SignupActivity.this, "Authentication failed.",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });*/
                 }
             }
         });
@@ -302,11 +238,6 @@ public class SignupActivity extends AppCompatActivity {
             toast.show();
             return false;
         }
-        if (email.getText().toString().isEmpty()) {
-            Toast toast = Toast.makeText(context, "Please enter the email", Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
         if (password.getText().toString().isEmpty()) {
             Toast toast = Toast.makeText(context, "Please enter the password", Toast.LENGTH_SHORT);
             toast.show();
@@ -339,4 +270,61 @@ public class SignupActivity extends AppCompatActivity {
             profileImage.setImageURI(dpp);
         }
     }
+
+    public void uploadUserImage(String id){
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(dpp);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            String encodedImg = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            StringRequest request = new StringRequest(
+                    Request.Method.POST,
+                    "https://chitchatsmd.000webhostapp.com/imageUpload.php",
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject obj=new JSONObject(response);
+                                if(obj.getInt("code")==1)
+                                {
+                                    Toast.makeText(SignupActivity.this, "User Registered Successfully", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(SignupActivity.this, contactsActivity.class);
+                                    startActivity(intent);
+                                }
+                                else{
+                                    Toast.makeText(SignupActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(SignupActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(SignupActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
+                        }
+                    })
+            {
+                @Nullable
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params=new HashMap<>();
+                    params.put("id", id);
+                    params.put("profileUrl", encodedImg);
+                    return params;
+                }
+            };
+            RequestQueue queue = Volley.newRequestQueue(SignupActivity.this);
+            queue.add(request);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
