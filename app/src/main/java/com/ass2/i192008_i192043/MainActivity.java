@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         if(obj.getInt("code")==1)
                         {
                             JSONObject user=obj.getJSONObject("user");
+
                             User.getCurrentUser().setName(user.getString("name"));
                             User.getCurrentUser().setUserId(user.getString("userId"));
                             User.getCurrentUser().setPhno(user.getString("phoneNumber"));

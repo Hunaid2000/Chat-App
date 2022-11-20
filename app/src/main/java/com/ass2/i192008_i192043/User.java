@@ -15,6 +15,10 @@ public class User {
     public static User currentUser;
 
      static public User getCurrentUser(){
+         // check for null
+            if(currentUser == null){
+                currentUser = new User();
+            }
         return currentUser;
     }
     static public void setCurrentUser(User instance){
