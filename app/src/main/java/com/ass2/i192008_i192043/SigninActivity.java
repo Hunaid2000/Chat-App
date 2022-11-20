@@ -74,8 +74,7 @@ public class SigninActivity extends AppCompatActivity {
                     return;
                 }
                 getUserByEmailPassword(emailStr, passwordStr);
-                Intent intent = new Intent(SigninActivity.this, contactsActivity.class);
-                startActivity(intent);
+
             }
         });
 
@@ -118,6 +117,8 @@ public class SigninActivity extends AppCompatActivity {
                                 User.getCurrentUser().setBio(user.getString("bio"));
                                 User.getCurrentUser().setGender(user.getString("gender"));
                                 Toast.makeText(SigninActivity.this, "Sign in success", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SigninActivity.this, contactsActivity.class);
+                                startActivity(intent);
                             }
                             else{
                                 Toast.makeText(SigninActivity.this, "Incorrect Number or Password", Toast.LENGTH_LONG).show();

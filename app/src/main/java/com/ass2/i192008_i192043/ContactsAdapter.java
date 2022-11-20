@@ -23,12 +23,12 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
-    private List<Contact> contactsList;
+    private List<User> contactsList;
     private Context context;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public ContactsAdapter(List<Contact> contactsList, Context context) {
+    public ContactsAdapter(List<User> contactsList, Context context) {
         this.contactsList = contactsList;
         this.context = context;
     }
@@ -45,18 +45,23 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         String contactName = contactsList.get(position).getName();
         String contactTime = contactsList.get(position).getLastSeen();
         String contactImg = contactsList.get(position).getProfileUrl();
-        getLastMessage(contactImg, holder.contactLastMsg, holder.contactTime);
+//        getLastMessage(contactImg, holder.contactLastMsg, holder.contactTime);
         holder.contactName.setText(contactName);
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images/" + contactImg);
-        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-            try {
-                Picasso.get().load(uri).fit().centerCrop().into(holder.contactImg);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(context, "Failed to get profile image", Toast.LENGTH_SHORT).show();
-        });
+        try {
+            Picasso.get().load("https://chitchatsmd.000webhostapp.com/Images/" + contactImg).fit().centerCrop().into(holder.contactImg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images/" + contactImg);
+//        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+//            try {
+//                Picasso.get().load(uri).fit().centerCrop().into(holder.contactImg);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }).addOnFailureListener(e -> {
+//            Toast.makeText(context, "Failed to get profile image", Toast.LENGTH_SHORT).show();
+//        });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,18 +92,18 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         }
     }
 
-    public void getLastMessage(String contactID, TextView lastMsg, TextView lastMsgTime) {
-        db.collection("users").document(uid).collection("contacts").document(contactID).collection("messages").orderBy("time", Query.Direction.DESCENDING).limit(1).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    lastMsg.setText(document.getString("messagetxt"));
-                    lastMsgTime.setText(document.getString("time"));
-                }
-            }
-        });
-    }
+//    public void getLastMessage(String contactID, TextView lastMsg, TextView lastMsgTime) {
+//        db.collection("users").document(uid).collection("contacts").document(contactID).collection("messages").orderBy("time", Query.Direction.DESCENDING).limit(1).get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                for (QueryDocumentSnapshot document : task.getResult()) {
+//                    lastMsg.setText(document.getString("messagetxt"));
+//                    lastMsgTime.setText(document.getString("time"));
+//                }
+//            }
+//        });
+//    }
 
-    public void setFilteredList(List<Contact> newList) {
+    public void setFilteredList(List<User> newList) {
         this.contactsList = newList;
         notifyDataSetChanged();
     }

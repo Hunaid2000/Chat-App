@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Animation topAnm, bottomAnm;
     ImageView logo_image;
     TextView logoText;
+    User User;
     private static final int SPLASH_SCREEN= 3000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +56,14 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        getUser("1");
+        getUser("2");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent intent;
                 if (currentUser != null) {
                     // intent to the main player activity
-                    intent = new Intent(MainActivity.this, MainplayersActivity.class);
+                    intent = new Intent(MainActivity.this, contactsActivity.class);
                 }else{
                     // intent to the login activity
                     intent = new Intent(MainActivity.this, loginActivity.class);
@@ -86,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
                         if(obj.getInt("code")==1)
                         {
                             JSONObject user=obj.getJSONObject("user");
-
                             User.getCurrentUser().setName(user.getString("name"));
                             User.getCurrentUser().setUserId(user.getString("userId"));
                             User.getCurrentUser().setPhno(user.getString("phoneNumber"));
