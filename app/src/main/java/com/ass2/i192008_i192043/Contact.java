@@ -8,8 +8,7 @@ public class Contact extends User{
     }
 
     public void setUser(User user){
-        this.firstName = user.firstName;
-        this.lastName = user.lastName;
+        this.name = user.name;
         this.email = user.email;
         this.password = user.password;
         this.bio = user.bio;

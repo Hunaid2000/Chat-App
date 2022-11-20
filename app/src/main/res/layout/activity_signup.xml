@@ -64,13 +64,13 @@
                 >
 
                 <EditText
-                    android:id="@+id/firstName"
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="15dp"
                     android:autofillHints="Anas"
                     android:background="@color/white"
-                    android:hint="@string/firstName"
+                    android:hint="Name"
                     android:inputType="text"
                     android:textColor="@color/black"
                     android:textColorHint="@color/orange"
@@ -84,13 +84,13 @@
                 >
 
                 <EditText
-                    android:id="@+id/lastName"
+                    android:id="@+id/phno"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="15dp"
                     android:autofillHints="@string/lastName"
                     android:background="@color/white"
-                    android:hint="@string/lastName"
+                    android:hint="Phone Number"
                     android:inputType="text"
                     android:textColor="@color/black"
                     android:textColorHint="@color/orange"

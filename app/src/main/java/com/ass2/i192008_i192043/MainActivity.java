@@ -92,31 +92,18 @@ public class MainActivity extends AppCompatActivity {
                             User.getCurrentUser().setBio(user.getString("bio"));
                         }
                         else{
-                            Toast.makeText(
-                                    MainActivity.this,
-                                    obj.get("msg").toString()
-                                    ,Toast.LENGTH_LONG
-                            ).show();
+                            Toast.makeText(MainActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-
-                        Toast.makeText(
-                                MainActivity.this,
-                                "Incorrect JSON"
-                                ,Toast.LENGTH_LONG
-                        ).show();
+                        Toast.makeText(MainActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
                     }
                 }
             },
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(
-                            MainActivity.this,
-                            "Cannot Connect to the Server."
-                            ,Toast.LENGTH_LONG
-                    ).show();
+                    Toast.makeText(MainActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
                 }
             });
         RequestQueue queue= Volley.newRequestQueue(MainActivity.this);

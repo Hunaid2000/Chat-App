@@ -20,6 +20,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,13 +39,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class SignupActivity extends AppCompatActivity {
-    EditText firstName, lastName, email, password, bio;
-    String str = "";
+    EditText name, phno, email, password, bio;
+    String gender = "";
     RelativeLayout genderImage1, genderImage2, genderImage3;
     AppCompatButton signupButton;
     RelativeLayout profileImageHolder;
@@ -56,8 +66,8 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
         setContentView(R.layout.activity_signup);
-        firstName = findViewById(R.id.firstName);
-        lastName = findViewById(R.id.lastName);
+        name = findViewById(R.id.name);
+        phno = findViewById(R.id.phno);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         bio = findViewById(R.id.bio);
@@ -102,10 +112,58 @@ public class SignupActivity extends AppCompatActivity {
                 if (ValidateInput()) {
                     // save the user to local storage sqlite
                     User user = new User();
-                    user.setName(firstName.getText().toString());
-                    user.setGender(str);
+                    user.setName(name.getText().toString());
+                    user.setGender(gender);
                     user.setBio(bio.getText().toString());
-                    FirebaseStorage storage;
+                    user.setPhno(phno.getText().toString());
+                    user.setEmail(email.getText().toString());
+                    user.setPassword(password.getText().toString());
+
+                    StringRequest request=new StringRequest(
+                        Request.Method.POST,
+                        "https://chitchatsmd.000webhostapp.com/userInsert.php",
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject obj=new JSONObject(response);
+                                    if(obj.getInt("code")==1)
+                                    {
+                                        Toast.makeText(SignupActivity.this, obj.getString("msg"), Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        Toast.makeText(SignupActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(SignupActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(SignupActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                    {
+                        @Nullable
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String> params=new HashMap<>();
+                            params.put("name",name.getText().toString());
+                            params.put("phoneNumber",phno.getText().toString());
+                            params.put("email",email.getText().toString());
+                            params.put("password",password.getText().toString());
+                            params.put("gender",gender);
+                            params.put("bio",bio.getText().toString());
+                            return params;
+                        }
+                    };
+                    RequestQueue queue= Volley.newRequestQueue(SignupActivity.this);
+                    queue.add(request);
+
+                    /*FirebaseStorage storage;
                     StorageReference storageReference;
                     storage = FirebaseStorage.getInstance();
                     storageReference = storage.getReference();
@@ -119,7 +177,7 @@ public class SignupActivity extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d("TAG", "createUserWithEmail:success");
                                         User = mAuth.getCurrentUser();
-                                        String str= "";
+                                        String gender= "";
                                         // upload the image to firebase storage
                                         StorageReference ref = storageReference.child("images/" + User.getUid());
                                         ref.putFile(dpp)
@@ -170,7 +228,7 @@ public class SignupActivity extends AppCompatActivity {
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            });
+                            });*/
                 }
             }
         });
@@ -187,7 +245,7 @@ public class SignupActivity extends AppCompatActivity {
                         // set background to drawable resource white file
                         genderImage2.setBackgroundResource(R.drawable.gender_circle);
                         genderImage3.setBackgroundResource(R.drawable.gender_circle);
-                        str = "male";
+                        gender = "male";
                     }
                 }
         );
@@ -200,7 +258,7 @@ public class SignupActivity extends AppCompatActivity {
                         // set background to drawable resource white file
                         genderImage1.setBackgroundResource(R.drawable.gender_circle);
                         genderImage3.setBackgroundResource(R.drawable.gender_circle);
-                        str = "female";
+                        gender = "female";
                     }
                 }
         );
@@ -214,7 +272,7 @@ public class SignupActivity extends AppCompatActivity {
                         // set background to drawable resource white file
                         genderImage1.setBackgroundResource(R.drawable.gender_circle);
                         genderImage2.setBackgroundResource(R.drawable.gender_circle);
-                        str = "other";
+                        gender = "other";
                     }
                 }
         );
@@ -234,13 +292,13 @@ public class SignupActivity extends AppCompatActivity {
 
     private boolean ValidateInput() {
         Context context = getApplicationContext();
-        if (firstName.getText().toString().isEmpty()) {
-            Toast toast = Toast.makeText(context, "Please enter the first name", Toast.LENGTH_SHORT);
+        if (name.getText().toString().isEmpty()) {
+            Toast toast = Toast.makeText(context, "Please enter the name", Toast.LENGTH_SHORT);
             toast.show();
             return false;
         }
-        if (lastName.getText().toString().isEmpty()) {
-            Toast toast = Toast.makeText(context, "Please enter the last name", Toast.LENGTH_SHORT);
+        if (phno.getText().toString().isEmpty()) {
+            Toast toast = Toast.makeText(context, "Please enter the phone number", Toast.LENGTH_SHORT);
             toast.show();
             return false;
         }
@@ -254,7 +312,7 @@ public class SignupActivity extends AppCompatActivity {
             toast.show();
             return false;
         }
-        if (str.isEmpty()) {
+        if (gender.isEmpty()) {
             Toast toast = Toast.makeText(context, "Please select the gender", Toast.LENGTH_SHORT);
             toast.show();
             return false;

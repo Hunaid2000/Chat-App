@@ -89,7 +89,7 @@ public class contactsActivity extends AppCompatActivity {
                 String search = s.toString().toLowerCase();
                 ArrayList<Contact> filteredContacts = new ArrayList<>();
                 for (int i = 0; i < contacts.size(); i++) {
-                    if (contacts.get(i).getFirstName().toLowerCase().contains(search.toLowerCase()) || contacts.get(i).getLastName().toLowerCase().contains(search.toLowerCase())) {
+                    if (contacts.get(i).getName().toLowerCase().contains(search.toLowerCase())) {
                         filteredContacts.add(contacts.get(i));
                     }
                 }
@@ -117,7 +117,7 @@ public class contactsActivity extends AppCompatActivity {
         builder.setPositiveButton("Add", (dialog, which) -> {
             String emailStr = contact_no.getText().toString();
             if (emailStr.isEmpty()) {
-                Toast.makeText(this, "Please enter an email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please enter contact number", Toast.LENGTH_SHORT).show();
             } else {
                 db.collection("users").get().addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()) {
@@ -127,8 +127,7 @@ public class contactsActivity extends AppCompatActivity {
                                 String contactUid = document.getId();
                                 Contact contact = new Contact();
                                 contact.setEmail(emailStr);
-                                contact.setFirstName(document.getString("firstName"));
-                                contact.setLastName(document.getString("lastName"));
+                                contact.setName(document.getString("firstName"));
                                 contact.setBio(document.getString("bio"));
                                 contact.setGender(document.getString("gender"));
                                 contact.setProfileUrl(document.getId());

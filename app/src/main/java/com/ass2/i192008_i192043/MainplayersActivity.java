@@ -151,12 +151,10 @@ public class MainplayersActivity extends AppCompatActivity {
         db.collection("users").document(uid).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // get the user information
-                user.setFirstName(task.getResult().getString("firstName"));
-                user.setLastName(task.getResult().getString("lastName"));
+                user.setName(task.getResult().getString("firstName"));
                 user.setGender(task.getResult().getString("gender"));
                 user.setBio(task.getResult().getString("bio"));
-                String str = user.getFirstName() + " " + user.getLastName();
-                userName.setText(str);
+                userName.setText(user.getName());
                 // get profile image from the firebase storage
                 ref.getDownloadUrl().addOnSuccessListener(uri -> {
                     // fit the image in the circle imageView dimensions using the picasso

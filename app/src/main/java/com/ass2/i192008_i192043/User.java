@@ -1,25 +1,6 @@
 package com.ass2.i192008_i192043;
 
 public class User {
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-
-    String lastName;
-    String firstName;
     String userId;
     String name;
     String email;
