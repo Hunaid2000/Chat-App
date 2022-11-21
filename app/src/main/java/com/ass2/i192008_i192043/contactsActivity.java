@@ -37,7 +37,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,9 +51,8 @@ public class contactsActivity extends AppCompatActivity {
     ImageView profileImg;
     ArrayList<User> contacts;
     ContactsAdapter adapter;
-    FirebaseAuth mAuth;
-    String uid;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    Calendar calendar= Calendar.getInstance();
+    SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,69 +63,55 @@ public class contactsActivity extends AppCompatActivity {
         addContact = findViewById(R.id.add_contact);
         searchContactText = findViewById(R.id.search_contacts_text);
         user = user.getCurrentUser();
-        user.setProfileUrl(user.getUserId()+".jpg");
-        mAuth = FirebaseAuth.getInstance();
-        uid = mAuth.getCurrentUser().getUid();
         try {
             Picasso.get().load("https://chitchatsmd.000webhostapp.com/Images/" + user.getProfileUrl()).fit().centerCrop().into(profileImg);
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images/" + uid);
-//        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-//            // fit the image in the circle imageView dimensions using the picasso
-//            try {
-//                Picasso.get().load(uri).fit().centerCrop().into(profileImg);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }).addOnFailureListener(e -> {
-//            Toast.makeText(contactsActivity.this, "Failed to get profile image", Toast.LENGTH_SHORT).show();
-//        });
 
         contacts = new ArrayList<>();
         adapter = new ContactsAdapter(contacts, this);
         contacts_rv.setAdapter(adapter);
         contacts_rv.setLayoutManager(new LinearLayoutManager(this));
 
-
         StringRequest request=new StringRequest(
-                Request.Method.GET,
-                "https://chitchatsmd.000webhostapp.com/getContactsById.php?userId="+user.getUserId(),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject obj=new JSONObject(response);
-                            if(obj.getInt("code")==1)
+            Request.Method.GET,
+            "https://chitchatsmd.000webhostapp.com/getContactsById.php?userId="+user.getUserId(),
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject obj=new JSONObject(response);
+                        if(obj.getInt("code")==1)
+                        {
+                            JSONArray users=obj.getJSONArray("users");
+                            for (int i=0; i<users.length();i++)
                             {
-                                JSONArray users=obj.getJSONArray("user");
-                                for (int i=0; i<users.length();i++)
-                                {
-                                    JSONObject userObj = obj.getJSONObject("user");
-                                    User contact = new User();
-                                    contact.setName(userObj.getString("name"));
-                                    contact.setUserId(userObj.getString("userId"));
-                                    contacts.add(contact);
-                                }
-                                adapter.notifyDataSetChanged();
-                                Toast.makeText(contactsActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                                JSONObject userObj = users.getJSONObject(i);
+                                User contact = new User();
+                                contact.setName(userObj.getString("name"));
+                                contact.setUserId(userObj.getString("userId"));
+                                contact.setProfileUrl(contact.getUserId()+".jpg");
+                                contacts.add(contact);
                             }
-                            else{
-                                Toast.makeText(contactsActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(contactsActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
+                            adapter.setList(contacts);
+                            Toast.makeText(contactsActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
                         }
+                        else{
+                            Toast.makeText(contactsActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(contactsActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(contactsActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
-                    }
-                });
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(contactsActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
+                }
+            });
         RequestQueue queue= Volley.newRequestQueue(contactsActivity.this);
         queue.add(request);
 
@@ -151,7 +138,7 @@ public class contactsActivity extends AppCompatActivity {
                 if(filteredContacts.isEmpty()){
                     Toast.makeText(contactsActivity.this, "No contacts found", Toast.LENGTH_SHORT).show();
                 }
-                adapter.setFilteredList(filteredContacts);
+                adapter.setList(filteredContacts);
             }
 
             @Override
@@ -252,27 +239,6 @@ public class contactsActivity extends AppCompatActivity {
                     });
                 RequestQueue queue= Volley.newRequestQueue(contactsActivity.this);
                 queue.add(request);
-//                db.collection("users").get().addOnCompleteListener(task1 -> {
-//                    if (task1.isSuccessful()) {
-//                        for (DocumentSnapshot document : task1.getResult()) {
-//                            String email_user = document.getString("email");
-//                            if (email_user.equals(emailStr)) {
-//                                String contactUid = document.getId();
-//                                Contact contact = new Contact();
-//                                contact.setEmail(emailStr);
-//                                contact.setName(document.getString("firstName"));
-//                                contact.setBio(document.getString("bio"));
-//                                contact.setGender(document.getString("gender"));
-//                                contact.setProfileUrl(document.getId());
-//                                db.collection("users").document(uid).collection("contacts").document(contactUid).set(contact);
-//                                contacts.add(contact);
-//                                adapter.notifyDataSetChanged();
-//                                Toast.makeText(this, "Contact added successfully", Toast.LENGTH_SHORT).show();
-//
-//                            }
-//                        }
-//                    }
-//                });
             }
         });
 
@@ -286,30 +252,124 @@ public class contactsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        db.collection("users").get().addOnCompleteListener(task1 -> {
-            if (task1.isSuccessful()) {
-                for (DocumentSnapshot document : task1.getResult()) {
-                    if (uid != document.getId()) {
-                        String contactUid = document.getId();
-                        db.collection("users").document(contactUid).collection("contacts").document(uid).update("status", "online");
+
+        StringRequest request = new StringRequest(
+            Request.Method.POST,
+            "https://chitchatsmd.000webhostapp.com/updateUserStatus.php",
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject obj=new JSONObject(response);
+                        if(obj.getInt("code")==1)
+                        {
+
+
+//                            Toast.makeText(contactsActivity.this, "User Registered Successfully", Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(contactsActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(contactsActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
                     }
                 }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(contactsActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
+                }
+            })
+        {
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params=new HashMap<>();
+                params.put("id", user.getUserId());
+                params.put("lastSeen", null);
+                params.put("onlineStatus", "online");
+                user.setLastSeen(null);
+                user.setStatus("online");
+                return params;
             }
-        });
+        };
+        RequestQueue queue = Volley.newRequestQueue(contactsActivity.this);
+        queue.add(request);
+
+
+//        db.collection("users").get().addOnCompleteListener(task1 -> {
+//            if (task1.isSuccessful()) {
+//                for (DocumentSnapshot document : task1.getResult()) {
+//                    if (uid != document.getId()) {
+//                        String contactUid = document.getId();
+//                        db.collection("users").document(contactUid).collection("contacts").document(uid).update("status", "online");
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        db.collection("users").get().addOnCompleteListener(task1 -> {
-            if (task1.isSuccessful()) {
-                for (DocumentSnapshot document : task1.getResult()) {
-                    if (uid != document.getId()) {
-                        String contactUid = document.getId();
-                        db.collection("users").document(contactUid).collection("contacts").document(uid).update("status", "offline");
+
+        StringRequest request = new StringRequest(
+            Request.Method.POST,
+            "https://chitchatsmd.000webhostapp.com/updateUserStatus.php",
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject obj=new JSONObject(response);
+                        if(obj.getInt("code")==1)
+                        {
+
+//                                Toast.makeText(contactsActivity.this, "User Registered Successfully", Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(contactsActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(contactsActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
                     }
                 }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(contactsActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
+                }
+            })
+        {
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params=new HashMap<>();
+                String lastSeen = currentTime.format(calendar.getTime());
+                params.put("id", user.getUserId());
+                params.put("lastSeen", lastSeen);
+                params.put("onlineStatus", "offline");
+                user.setLastSeen(lastSeen);
+                user.setStatus("offline");
+                return params;
             }
-        });
+        };
+        RequestQueue queue = Volley.newRequestQueue(contactsActivity.this);
+        queue.add(request);
+
+
+//        db.collection("users").get().addOnCompleteListener(task1 -> {
+//            if (task1.isSuccessful()) {
+//                for (DocumentSnapshot document : task1.getResult()) {
+//                    if (uid != document.getId()) {
+//                        String contactUid = document.getId();
+//                        db.collection("users").document(contactUid).collection("contacts").document(uid).update("status", "offline");
+//                    }
+//                }
+//            }
+//        });
     }
 }

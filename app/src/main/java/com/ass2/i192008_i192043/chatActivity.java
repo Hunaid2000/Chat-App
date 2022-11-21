@@ -13,11 +13,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -51,60 +60,96 @@ public class chatActivity extends AppCompatActivity {
         uid = mAuth.getCurrentUser().getUid();
         recvName.setText(getIntent().getStringExtra("name"));
         String contactID = getIntent().getStringExtra("contactID");
+        String recvProfileUrl = getIntent().getStringExtra("contactImg");
 
-        db.collection("users").document(uid).collection("contacts").document(contactID).get().addOnSuccessListener(documentSnapshot -> {
-            recvStatus.setText(documentSnapshot.getString("status"));
-        });
+        try {
+            Picasso.get().load("https://chitchatsmd.000webhostapp.com/Images/" + recvProfileUrl).fit().centerCrop().into(recvProfileImg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        StringRequest request=new StringRequest(
+            Request.Method.GET,
+            "https://chitchatsmd.000webhostapp.com/getUserStatus.php?id="+contactID,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject obj=new JSONObject(response);
+                        if(obj.getInt("code")==1)
+                        {
+                            String status = obj.getString("onlineStatus");
+                            if(status.equals("offline"))
+                            {
+                                recvStatus.setText("Last Seen: " + obj.getString("lastSeen"));
+                            }
+                            else
+                            {
+                                recvStatus.setText(status);
+                            }
+                        }
+                        else{
+                            Toast.makeText(chatActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(chatActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
+                    }
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(chatActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
+                }
+            });
+        RequestQueue queue= Volley.newRequestQueue(chatActivity.this);
+        queue.add(request);
+
+
+//        db.collection("users").document(uid).collection("contacts").document(contactID).get().addOnSuccessListener(documentSnapshot -> {
+//            recvStatus.setText(documentSnapshot.getString("status"));
+//        });
 
         messages = new ArrayList<>();
         adapter = new MessageAdapter(messages, this);
         chat_rv.setAdapter(adapter);
         chat_rv.setLayoutManager(new LinearLayoutManager(this));
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images/" + contactID);
-        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-            try {
-                Picasso.get().load(uri).fit().centerCrop().into(recvProfileImg);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(chatActivity.this, "Failed to get profile image", Toast.LENGTH_SHORT).show();
-        });
 
         back.setOnClickListener(v -> {
             startActivity(new Intent(chatActivity.this, contactsActivity.class));
         });
 
 
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = msg.getText().toString();
-                if (message.isEmpty()) {
-                    Toast.makeText(chatActivity.this, "Please enter a message", Toast.LENGTH_SHORT).show();
-                } else {
-                    Message message_obj = new Message(msg.getText().toString(), uid, contactID);
-                    db.collection("users").document(uid).collection("contacts").document(contactID).collection("messages").add(message_obj);
-                    db.collection("users").document(contactID).collection("contacts").document(uid).collection("messages").add(message_obj);
-
-                }
-            }
-        });
-
-
-        db.collection("users").document(uid).collection("contacts").document(contactID).collection("messages").addSnapshotListener((value, error) -> {
-            messages.clear();
-            for (int i = 0; i < value.size(); i++) {
-                Message message = new Message();
-                message.setMessagetxt(value.getDocuments().get(i).getString("messagetxt"));
-                message.setSender(value.getDocuments().get(i).getString("sender"));
-                message.setReceiver(value.getDocuments().get(i).getString("receiver"));
-                message.setTime(value.getDocuments().get(i).getString("time"));
-                messages.add(message);
-            }
-            adapter.notifyDataSetChanged();
-        });
+//        send.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String message = msg.getText().toString();
+//                if (message.isEmpty()) {
+//                    Toast.makeText(chatActivity.this, "Please enter a message", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Message message_obj = new Message(msg.getText().toString(), uid, contactID);
+//                    db.collection("users").document(uid).collection("contacts").document(contactID).collection("messages").add(message_obj);
+//                    db.collection("users").document(contactID).collection("contacts").document(uid).collection("messages").add(message_obj);
+//
+//                }
+//            }
+//        });
+//
+//
+//        db.collection("users").document(uid).collection("contacts").document(contactID).collection("messages").addSnapshotListener((value, error) -> {
+//            messages.clear();
+//            for (int i = 0; i < value.size(); i++) {
+//                Message message = new Message();
+//                message.setMessagetxt(value.getDocuments().get(i).getString("messagetxt"));
+//                message.setSender(value.getDocuments().get(i).getString("sender"));
+//                message.setReceiver(value.getDocuments().get(i).getString("receiver"));
+//                message.setTime(value.getDocuments().get(i).getString("time"));
+//                messages.add(message);
+//            }
+//            adapter.notifyDataSetChanged();
+//        });
 
     }
 }
