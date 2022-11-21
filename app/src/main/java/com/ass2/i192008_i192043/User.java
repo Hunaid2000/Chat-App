@@ -13,7 +13,10 @@ public class User {
 
     public static User currentUser;
 
-     static public User getCurrentUser(){
+    public User() {
+    }
+
+    static public User getCurrentUser(){
          // check for null
             if(currentUser == null){
                 currentUser = new User();

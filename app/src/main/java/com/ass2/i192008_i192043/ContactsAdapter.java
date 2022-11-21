@@ -25,8 +25,6 @@ import java.util.List;
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
     private List<User> contactsList;
     private Context context;
-    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public ContactsAdapter(List<User> contactsList, Context context) {
         this.contactsList = contactsList;
@@ -52,23 +50,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images/" + contactImg);
-//        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-//            try {
-//                Picasso.get().load(uri).fit().centerCrop().into(holder.contactImg);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }).addOnFailureListener(e -> {
-//            Toast.makeText(context, "Failed to get profile image", Toast.LENGTH_SHORT).show();
-//        });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(context,chatActivity.class);
                 intent.putExtra("name", holder.contactName.getText().toString());
-                intent.putExtra("contactID", contactImg);
+                intent.putExtra("contactID", contactsList.get(position).getUserId());
+                intent.putExtra("contactImg", contactImg);
                 context.startActivity(intent);
             }
         });
@@ -103,7 +92,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 //        });
 //    }
 
-    public void setFilteredList(List<User> newList) {
+    public void setList(List<User> newList) {
         this.contactsList = newList;
         notifyDataSetChanged();
     }

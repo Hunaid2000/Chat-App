@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                             User.getCurrentUser().setUserId(user.getString("userId"));
                             User.getCurrentUser().setPhno(user.getString("phoneNumber"));
                             User.getCurrentUser().setBio(user.getString("bio"));
+                            User.getCurrentUser().setProfileUrl(User.getCurrentUser().getUserId()+".jpg");
                         }
                         else{
                             Toast.makeText(MainActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
