@@ -23,10 +23,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int msg_sender = 1;
     private List<Message> messagesList;
     private Context context;
+    User user;
 
     public MessageAdapter(List<Message> messagesList, Context context) {
         this.messagesList = messagesList;
         this.context = context;
+        user = user.getCurrentUser();
     }
 
     @NonNull
@@ -49,27 +51,40 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         String time = messagesList.get(position).getTime();
         holder.msg.setText(message);
         holder.msg_time.setText(time);
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images/" + sender);
-        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-            try {
-                Picasso.get().load(uri).fit().centerCrop().into(holder.sent_prof_pic);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(context, "Failed to get sender profile image", Toast.LENGTH_SHORT).show();
-        });
 
-        storageReference = FirebaseStorage.getInstance().getReference().child("images/" + receiver);
-        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-            try {
-                Picasso.get().load(uri).fit().centerCrop().into(holder.recv_prof_pic);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(context, "Failed to get receiver profile image", Toast.LENGTH_SHORT).show();
-        });
+        try {
+            Picasso.get().load("https://chitchatsmd.000webhostapp.com/Images/" + sender+".jpg").fit().centerCrop().into(holder.sent_prof_pic);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images/" + sender);
+//        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+//            try {
+//                Picasso.get().load(uri).fit().centerCrop().into(holder.sent_prof_pic);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }).addOnFailureListener(e -> {
+//            Toast.makeText(context, "Failed to get sender profile image", Toast.LENGTH_SHORT).show();
+//        });
+
+        try {
+            Picasso.get().load("https://chitchatsmd.000webhostapp.com/Images/" + receiver+".jpg").fit().centerCrop().into(holder.recv_prof_pic);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        storageReference = FirebaseStorage.getInstance().getReference().child("images/" + receiver);
+//        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+//            try {
+//                Picasso.get().load(uri).fit().centerCrop().into(holder.recv_prof_pic);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }).addOnFailureListener(e -> {
+//            Toast.makeText(context, "Failed to get receiver profile image", Toast.LENGTH_SHORT).show();
+//        });
     }
 
     @Override
@@ -92,11 +107,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if (messagesList.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+        if (messagesList.get(position).getSender().equals(user.getUserId())) {
             return msg_sender;
         } else {
             return msg_receiver;
         }
     }
+
+    public void setList(List<Message> newList) {
+        this.messagesList = newList;
+        notifyDataSetChanged();
+    }
+
 }
 

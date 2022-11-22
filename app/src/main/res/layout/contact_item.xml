@@ -46,7 +46,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="textStart"
-                android:text="msg"
                 android:textColor="@color/white"
                 android:textSize="14dp" />
 
@@ -59,8 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:textColor="@color/white"
-        android:text="time"/>
+        android:textColor="@color/white"/>
 
 
 

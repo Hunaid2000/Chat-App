@@ -264,8 +264,6 @@ public class contactsActivity extends AppCompatActivity {
                         if(obj.getInt("code")==1)
                         {
 
-
-//                            Toast.makeText(contactsActivity.this, "User Registered Successfully", Toast.LENGTH_LONG).show();
                         }
                         else{
                             Toast.makeText(contactsActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -287,10 +285,11 @@ public class contactsActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params=new HashMap<>();
+                String lastSeen = currentTime.format(calendar.getTime());
                 params.put("id", user.getUserId());
-                params.put("lastSeen", null);
+                params.put("lastSeen", lastSeen);
                 params.put("onlineStatus", "online");
-                user.setLastSeen(null);
+                user.setLastSeen(lastSeen);
                 user.setStatus("online");
                 return params;
             }
@@ -298,17 +297,6 @@ public class contactsActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(contactsActivity.this);
         queue.add(request);
 
-
-//        db.collection("users").get().addOnCompleteListener(task1 -> {
-//            if (task1.isSuccessful()) {
-//                for (DocumentSnapshot document : task1.getResult()) {
-//                    if (uid != document.getId()) {
-//                        String contactUid = document.getId();
-//                        db.collection("users").document(contactUid).collection("contacts").document(uid).update("status", "online");
-//                    }
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -326,7 +314,6 @@ public class contactsActivity extends AppCompatActivity {
                         if(obj.getInt("code")==1)
                         {
 
-//                                Toast.makeText(contactsActivity.this, "User Registered Successfully", Toast.LENGTH_LONG).show();
                         }
                         else{
                             Toast.makeText(contactsActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -360,16 +347,5 @@ public class contactsActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(contactsActivity.this);
         queue.add(request);
 
-
-//        db.collection("users").get().addOnCompleteListener(task1 -> {
-//            if (task1.isSuccessful()) {
-//                for (DocumentSnapshot document : task1.getResult()) {
-//                    if (uid != document.getId()) {
-//                        String contactUid = document.getId();
-//                        db.collection("users").document(contactUid).collection("contacts").document(uid).update("status", "offline");
-//                    }
-//                }
-//            }
-//        });
     }
 }

@@ -19,7 +19,7 @@ public class Message {
         this.receiver = receiver;
         Calendar calendar= Calendar.getInstance();
         SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
-        this.time = currentTime.format(calendar.getTime()).toString();
+        this.time = currentTime.format(calendar.getTime());
     }
 
     public String getMessagetxt() {
