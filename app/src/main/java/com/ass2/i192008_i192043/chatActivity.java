@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -402,6 +403,10 @@ public class chatActivity extends AppCompatActivity {
 
         }
 
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading...");
+        progressDialog.show();
+
         RequestQueue queue;
         for (String encodedImage : encodedImgs) {
             StringRequest request=new StringRequest(
@@ -414,6 +419,7 @@ public class chatActivity extends AppCompatActivity {
                                 JSONObject obj=new JSONObject(response);
                                 if(obj.getInt("code")==1)
                                 {
+                                    progressDialog.dismiss();
                                     Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
                                 }
                                 else{
