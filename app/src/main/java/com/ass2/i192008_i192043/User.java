@@ -1,5 +1,7 @@
 package com.ass2.i192008_i192043;
 
+import android.graphics.Bitmap;
+
 public class User {
     String userId;
     String name;
@@ -10,6 +12,16 @@ public class User {
     String gender;
     String status;
     String lastSeen;
+
+    Bitmap userImg;
+
+    public Bitmap getUserImg() {
+        return userImg;
+    }
+
+    public void setUserImg(Bitmap userImg) {
+        this.userImg = userImg;
+    }
 
     public static User currentUser;
 

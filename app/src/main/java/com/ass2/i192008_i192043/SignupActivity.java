@@ -289,6 +289,10 @@ public class SignupActivity extends AppCompatActivity {
                                     editor.putString("phoneNumber", user.getPhno());
                                     editor.putString("gender",user.getGender());
                                     editor.putString("bio",user.getBio());
+                                    editor.putString("profile",user.getUserId()+".jpg");
+                                    editor.putString("image_data", encodedImg);
+
+
                                     editor.commit();
 
                                     User.getCurrentUser().setUserId(user.getUserId());
@@ -296,6 +300,12 @@ public class SignupActivity extends AppCompatActivity {
                                     User.getCurrentUser().setPhno(user.getPhno());
                                     User.getCurrentUser().setBio(user.getBio());
                                     User.getCurrentUser().setGender(user.getGender());
+                                    User.getCurrentUser().setProfileUrl(user.getUserId()+".jpg");
+                                    if( !encodedImg.equalsIgnoreCase("") ){
+                                        byte[] b = Base64.decode(encodedImg, Base64.DEFAULT);
+                                        Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                                        User.getCurrentUser().setUserImg(bitmap);
+                                    }
 
                                     Intent intent = new Intent(SignupActivity.this, contactsActivity.class);
                                     startActivity(intent);

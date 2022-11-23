@@ -7,14 +7,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -25,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.jean.jcplayer.model.JcAudio;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -45,6 +49,7 @@ import java.util.Map;
 
 public class contactsActivity extends AppCompatActivity {
     User user;
+    ImageView profile;
     RecyclerView contacts_rv;
     ImageButton addContact;
     EditText searchContactText;
@@ -52,6 +57,8 @@ public class contactsActivity extends AppCompatActivity {
     ArrayList<User> contacts;
     ContactsAdapter adapter;
     Calendar calendar= Calendar.getInstance();
+    NavigationView navigationView;
+    TextView userName;
     SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
 
     @Override
@@ -60,14 +67,20 @@ public class contactsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contacts);
         contacts_rv = findViewById(R.id.contacts_rv);
         profileImg = findViewById(R.id.profile_image);
+        navigationView = findViewById(R.id.navigation_view);
+        View HeaderView = navigationView.getHeaderView(0);
+        userName = HeaderView.findViewById(R.id.userName);
+        profile = HeaderView.findViewById(R.id.profileImage);
+        user = user.getCurrentUser();
+        userName.setText(user.getName());
+
+        profile.setImageBitmap(user.getUserImg());
+
         addContact = findViewById(R.id.add_contact);
         searchContactText = findViewById(R.id.search_contacts_text);
-        user = user.getCurrentUser();
-        try {
-            Picasso.get().load("https://chitchatsmd.000webhostapp.com/Images/" + user.getProfileUrl()).fit().centerCrop().into(profileImg);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+
+        profileImg.setImageBitmap(user.getUserImg());
 
         contacts = new ArrayList<>();
         adapter = new ContactsAdapter(contacts, this);
@@ -148,6 +161,8 @@ public class contactsActivity extends AppCompatActivity {
         });
 
     }
+
+
 
     private void addContactDailogbox() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

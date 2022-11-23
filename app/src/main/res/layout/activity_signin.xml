@@ -65,7 +65,7 @@
                 android:layout_marginHorizontal="15dp"
                 android:autofillHints="Email"
                 android:background="@color/white"
-                android:hint="@string/email"
+                android:hint="@string/phone_Number"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/black"
                 android:textColorHint="@color/orange"

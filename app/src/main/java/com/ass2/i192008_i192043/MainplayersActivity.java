@@ -64,7 +64,7 @@ public class MainplayersActivity extends AppCompatActivity {
         uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         storageReference = (FirebaseStorage.getInstance()).getReference();
         StorageReference ref = storageReference.child("images/" + uid);
-        // get information from the firebaseFirestore
+        // get information from the firebase Firestore
         loadProfile(db, uid, ref, user);
         // add the drawer layout listener
         addDrawerLayoutListener();

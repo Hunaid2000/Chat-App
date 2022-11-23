@@ -148,4 +148,8 @@
     <string name="music_list">Music List</string>
     <string name="forget_email">Enter your Email</string>
     <string  name="submit">Submit</string>
+
+    <!-- Assignment03 string    -->
+    <string name="phone_Number">Phone Number</string>
+
 </resources>

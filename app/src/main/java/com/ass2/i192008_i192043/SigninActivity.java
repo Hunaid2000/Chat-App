@@ -117,6 +117,8 @@ public class SigninActivity extends AppCompatActivity {
                                 User.getCurrentUser().setPhno(user.getString("phoneNumber"));
                                 User.getCurrentUser().setBio(user.getString("bio"));
                                 User.getCurrentUser().setGender(user.getString("gender"));
+                                User.getCurrentUser().setProfileUrl(User.getCurrentUser().getUserId()+".jpg");
+
 
                                 Toast.makeText(SigninActivity.this, "Sign in success", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(SigninActivity.this, contactsActivity.class);

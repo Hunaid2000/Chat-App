@@ -2,9 +2,12 @@ package com.ass2.i192008_i192043;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -89,6 +92,14 @@ public class MainActivity extends AppCompatActivity {
             User.getCurrentUser().setPhno(sharedPreferences.getString("phoneNumber", null));
             User.getCurrentUser().setBio(sharedPreferences.getString("bio", null));
             User.getCurrentUser().setGender(sharedPreferences.getString("gender",null));
+            User.getCurrentUser().setProfileUrl(sharedPreferences.getString("profile",null));
+
+            String previouslyEncodedImage = sharedPreferences.getString("image_data", null);
+            if( !previouslyEncodedImage.equalsIgnoreCase("") ){
+                byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                User.getCurrentUser().setUserImg(bitmap);
+            }
             currentUser = User.getCurrentUser();
         }
     }
