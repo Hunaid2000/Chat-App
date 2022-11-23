@@ -80,6 +80,7 @@ public class chatActivity extends AppCompatActivity {
         recvName.setText(getIntent().getStringExtra("name"));
         contactID = getIntent().getStringExtra("contactID");
         String recvProfileUrl = getIntent().getStringExtra("contactImg");
+        String playerid = getIntent().getStringExtra("playerid");
         screen_shot= findViewById(R.id.screen_shot); //added
 
         try {
@@ -165,11 +166,23 @@ public class chatActivity extends AppCompatActivity {
                                     JSONObject obj=new JSONObject(response);
                                     if(obj.getInt("code")==1)
                                     {
+                                        JSONObject json = null;
+                                        try {
+                                            json= new JSONObject("{ 'include_player_ids': [ '" + playerid + "' ]," +
+                                                    "'contents': { 'en' : '"+message+"' } ," +
+                                                    " 'headings' :{'en':'Message'} }");
+
+                                            System.out.println("json: "+json);
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+
+                                            Toast.makeText(chatActivity.this,"JSON Error",Toast.LENGTH_LONG).show();
+                                        }
+
 
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
-                                        OneSignal.postNotification(new JSONObject("{ 'include_player_ids': [ " + obj.getString("playerid") + " ]," +
-                                                "'contents': { 'en' : "+msg+" } ," +
-                                                " 'headings' :{'en':'Message'} }"), new OneSignal.PostNotificationResponseHandler() {
+                                        OneSignal.postNotification(json, new OneSignal.PostNotificationResponseHandler() {
                                             @Override
                                             public void onSuccess(JSONObject jsonObject) {
                                                 Toast.makeText(chatActivity.this,"Notification sent",Toast.LENGTH_LONG).show();

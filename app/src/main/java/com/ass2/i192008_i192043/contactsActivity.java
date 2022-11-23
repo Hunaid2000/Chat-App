@@ -116,6 +116,7 @@ public class contactsActivity extends AppCompatActivity implements NavigationVie
                                 contact.setName(userObj.getString("name"));
                                 contact.setUserId(userObj.getString("userId"));
                                 contact.setProfileUrl(contact.getUserId()+".jpg");
+                                contact.setPlayerid(userObj.getString("playerid"));
                                 contacts.add(contact);
                             }
                             adapter.setList(contacts);
