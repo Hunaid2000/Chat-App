@@ -131,20 +131,15 @@ public class User {
                         con.setDoInput(true);
                         con.connect();
                         responseCode = con.getResponseCode();
-                        // write the response code to the log
-                        Log.d("Response Code", "Response Code: " + responseCode);
                         if(responseCode == HttpURLConnection.HTTP_OK)
                         {
                             in = con.getInputStream();
                             bmp = BitmapFactory.decodeStream(in);
                             in.close();
                             User.getCurrentUser().setUserImg(bmp);
-                            System.out.println("Sucess");
                         }
                     }
                     catch(Exception ex){
-                        Log.e("Exception",ex.toString());
-                        System.out.println("Exception :");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

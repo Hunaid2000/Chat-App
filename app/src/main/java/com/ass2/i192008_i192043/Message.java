@@ -10,6 +10,7 @@ public class Message {
     private String sender;
     private String receiver;
     private String time;
+    private String msgtype;
 
     public Message() {
     }
@@ -61,5 +62,13 @@ public class Message {
 
     public void setMessageId(String messageId) {
         this.messageId = messageId;
+    }
+
+    public String getMsgtype() {
+        return msgtype;
+    }
+
+    public void setMsgtype(String msgtype) {
+        this.msgtype = msgtype;
     }
 }

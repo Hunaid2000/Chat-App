@@ -1,6 +1,8 @@
 package com.ass2.i192008_i192043;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +28,18 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
-    public static final int msg_receiver = 0;
-    public static final int msg_sender = 1;
+    public static final int recv_chat_item = 0;
+    public static final int sent_chat_item = 1;
+    public static final int sent_img_item = 2;
+    public static final int recv_img_item = 3;
     private List<Message> messagesList;
     private Context context;
     User user;
@@ -46,11 +53,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == msg_sender) {
+        if (viewType == sent_chat_item) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_chat_item, parent, false);
             return new ViewHolder(view);
-        } else {
+        }
+        else if (viewType == recv_chat_item) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recv_chat_item, parent, false);
+            return new ViewHolder(view);
+        }
+        else if (viewType == sent_img_item) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_img_item, parent, false);
+            return new ViewHolder(view);
+        }
+        else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recv_img_item, parent, false);
             return new ViewHolder(view);
         }
     }
@@ -62,7 +78,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         String sender = messagesList.get(position).getSender();
         String receiver = messagesList.get(position).getReceiver();
         String time = messagesList.get(position).getTime();
-        holder.msg.setText(message);
+        if(messagesList.get(position).getMsgtype().equals("1")){
+            holder.msg.setText(message);
+        }
+        else if(messagesList.get(position).getMsgtype().equals("2")){
+            setImg("https://chitchatsmd.000webhostapp.com/ChatImages/" +message, holder.msgImg);
+        }
+
         holder.msg_time.setText(time);
 
         if (messagesList.get(position).getSender().equals(user.getUserId())) {
@@ -223,11 +245,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView msg, msg_time;
-        ImageView recv_prof_pic, sent_prof_pic;
+        ImageView recv_prof_pic, sent_prof_pic, msgImg;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             msg = itemView.findViewById(R.id.msg);
+            msgImg = itemView.findViewById(R.id.msgImg);
             msg_time = itemView.findViewById(R.id.msg_time);
             recv_prof_pic = itemView.findViewById(R.id.recv_prof_pic);
             sent_prof_pic = itemView.findViewById(R.id.sent_prof_pic);
@@ -237,15 +260,60 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public int getItemViewType(int position) {
         if (messagesList.get(position).getSender().equals(user.getUserId())) {
-            return msg_sender;
-        } else {
-            return msg_receiver;
+            if(messagesList.get(position).getMsgtype().equals("1")){
+                return sent_chat_item;
+            }
+            else if(messagesList.get(position).getMsgtype().equals("2")){
+                return sent_img_item;
+            }
         }
+        else {
+            if(messagesList.get(position).getMsgtype().equals("1")){
+                return recv_chat_item;
+            }
+            else if(messagesList.get(position).getMsgtype().equals("2")){
+                return recv_img_item;
+            }
+        }
+        return -1;
     }
 
     public void setList(List<Message> newList) {
         this.messagesList = newList;
         notifyDataSetChanged();
+    }
+
+    public void setImg(String path, ImageView img){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try  {
+                    InputStream in =null;
+                    Bitmap bmp=null;
+                    int responseCode = -1;
+                    try{
+                        URL url = new URL(path);
+                        HttpURLConnection con = (HttpURLConnection)url.openConnection();
+                        con.setDoInput(true);
+                        con.connect();
+                        responseCode = con.getResponseCode();
+                        if(responseCode == HttpURLConnection.HTTP_OK)
+                        {
+                            in = con.getInputStream();
+                            bmp = BitmapFactory.decodeStream(in);
+                            in.close();
+                            img.setImageBitmap(bmp);
+                        }
+                    }
+                    catch(Exception ex){
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+
     }
 
 }

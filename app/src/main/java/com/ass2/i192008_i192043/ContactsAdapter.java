@@ -107,7 +107,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                                     JSONObject msgObj = messages_arr.getJSONObject(i);
                                     Message message = new Message();
                                     message.setMessageId(msgObj.getString("messageId"));
-                                    message.setMessagetxt(msgObj.getString("message"));
+                                    if(msgObj.getString("message").contains("jpg"))
+                                    {
+                                        message.setMessagetxt("Image");
+                                    }
+                                    else
+                                    {
+                                        message.setMessagetxt(msgObj.getString("message"));
+                                    }
                                     message.setSender(msgObj.getString("sender"));
                                     message.setReceiver(msgObj.getString("receiver"));
                                     message.setTime(msgObj.getString("msgtime"));
@@ -133,16 +140,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                 });
         RequestQueue queue= Volley.newRequestQueue(context);
         queue.add(request);
-        
-        
-//        db.collection("users").document(uid).collection("contacts").document(contactID).collection("messages").orderBy("time", Query.Direction.DESCENDING).limit(1).get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                for (QueryDocumentSnapshot document : task.getResult()) {
-//                    lastMsg.setText(document.getString("messagetxt"));
-//                    lastMsgTime.setText(document.getString("time"));
-//                }
-//            }
-//        });
     }
 
     public void setList(List<User> newList) {
