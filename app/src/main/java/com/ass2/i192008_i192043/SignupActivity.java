@@ -291,8 +291,6 @@ public class SignupActivity extends AppCompatActivity {
                                     editor.putString("bio",user.getBio());
                                     editor.putString("profile",user.getUserId()+".jpg");
                                     editor.putString("image_data", encodedImg);
-
-
                                     editor.commit();
 
                                     User.getCurrentUser().setUserId(user.getUserId());

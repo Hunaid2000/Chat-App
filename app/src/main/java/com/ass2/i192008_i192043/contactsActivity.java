@@ -1,8 +1,10 @@
 package com.ass2.i192008_i192043;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,11 +14,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.SearchView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,27 +30,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.jean.jcplayer.model.JcAudio;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class contactsActivity extends AppCompatActivity {
+public class contactsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     User user;
     ImageView profile;
     RecyclerView contacts_rv;
@@ -59,19 +52,26 @@ public class contactsActivity extends AppCompatActivity {
     Calendar calendar= Calendar.getInstance();
     NavigationView navigationView;
     TextView userName;
+    DrawerLayout drawerLayout;
+
     SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
         contacts_rv = findViewById(R.id.contacts_rv);
         profileImg = findViewById(R.id.profile_image);
+
+        drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
         View HeaderView = navigationView.getHeaderView(0);
         userName = HeaderView.findViewById(R.id.userName);
         profile = HeaderView.findViewById(R.id.profileImage);
-        user = user.getCurrentUser();
+        user = User.getCurrentUser();
         userName.setText(user.getName());
 
         profile.setImageBitmap(user.getUserImg());
@@ -86,6 +86,7 @@ public class contactsActivity extends AppCompatActivity {
         adapter = new ContactsAdapter(contacts, this);
         contacts_rv.setAdapter(adapter);
         contacts_rv.setLayoutManager(new LinearLayoutManager(this));
+
 
         StringRequest request=new StringRequest(
             Request.Method.GET,
@@ -161,7 +162,6 @@ public class contactsActivity extends AppCompatActivity {
         });
 
     }
-
 
 
     private void addContactDailogbox() {
@@ -362,5 +362,27 @@ public class contactsActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(contactsActivity.this);
         queue.add(request);
 
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        switch (item.getItemId()) {
+
+            case R.id.logout: {
+                Log.d("logout", "onClick: logout");
+                SharedPreferences preferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+                Intent intent = new Intent(contactsActivity.this, SigninActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            }
+        }
+        //close navigation drawer
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ public class SigninActivity extends AppCompatActivity {
     TextView forgetPassword;
     User User;
     Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +121,9 @@ public class SigninActivity extends AppCompatActivity {
                                 User.getCurrentUser().setGender(user.getString("gender"));
                                 User.getCurrentUser().setProfileUrl(User.getCurrentUser().getUserId()+".jpg");
 
-
+                                // get the profile image from the server and save it in the local storage
+                                User.getCurrentUser().SetUserFromURl("https://chitchatsmd.000webhostapp.com/Images/"+User.getCurrentUser().getProfileUrl());
+                                Log.d("Profile Url", "https://chitchatsmd.000webhostapp.com/Images/"+ User.getCurrentUser().getProfileUrl());
                                 Toast.makeText(SigninActivity.this, "Sign in success", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(SigninActivity.this, contactsActivity.class);
                                 startActivity(intent);

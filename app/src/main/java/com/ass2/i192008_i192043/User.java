@@ -1,6 +1,12 @@
 package com.ass2.i192008_i192043;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class User {
     String userId;
@@ -109,5 +115,43 @@ public class User {
 
     public void setPhno(String phno) {
         this.phno = phno;
+    }
+
+    public void SetUserFromURl(String path){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try  {
+                    InputStream in =null;
+                    Bitmap bmp=null;
+                    int responseCode = -1;
+                    try{
+                        URL url = new URL(path);
+                        HttpURLConnection con = (HttpURLConnection)url.openConnection();
+                        con.setDoInput(true);
+                        con.connect();
+                        responseCode = con.getResponseCode();
+                        // write the response code to the log
+                        Log.d("Response Code", "Response Code: " + responseCode);
+                        if(responseCode == HttpURLConnection.HTTP_OK)
+                        {
+                            in = con.getInputStream();
+                            bmp = BitmapFactory.decodeStream(in);
+                            in.close();
+                            User.getCurrentUser().setUserImg(bmp);
+                            System.out.println("Sucess");
+                        }
+                    }
+                    catch(Exception ex){
+                        Log.e("Exception",ex.toString());
+                        System.out.println("Exception :");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+
     }
 }
