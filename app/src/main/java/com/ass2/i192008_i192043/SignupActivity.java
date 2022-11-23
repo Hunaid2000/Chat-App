@@ -220,28 +220,8 @@ public class SignupActivity extends AppCompatActivity {
 
     private boolean ValidateInput() {
         Context context = getApplicationContext();
-        if (name.getText().toString().isEmpty()) {
-            Toast toast = Toast.makeText(context, "Please enter the name", Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
-        if (phno.getText().toString().isEmpty()) {
-            Toast toast = Toast.makeText(context, "Please enter the phone number", Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
-        if (password.getText().toString().isEmpty()) {
-            Toast toast = Toast.makeText(context, "Please enter the password", Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
-        if (gender.isEmpty()) {
-            Toast toast = Toast.makeText(context, "Please select the gender", Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
-        if (bio.getText().toString().isEmpty()) {
-            Toast toast = Toast.makeText(context, "Please enter the bio", Toast.LENGTH_SHORT);
+        if(RegistrationUtils.validateUserInput(name.getText().toString(),password.getText().toString(), phno.getText().toString())){
+            Toast toast = Toast.makeText(context, "Please enter correct input", Toast.LENGTH_SHORT);
             toast.show();
             return false;
         }
