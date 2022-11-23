@@ -180,48 +180,8 @@ public class chatActivity extends AppCompatActivity {
             }
         });
 
+        getMessages(user.getUserId(), contactID);
 
-        StringRequest request2=new StringRequest(
-                Request.Method.GET,
-                "https://chitchatsmd.000webhostapp.com/getMessages.php?sender="+user.getUserId() + "&receiver=" + contactID,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject obj=new JSONObject(response);
-                            if(obj.getInt("code")==1)
-                            {
-                                JSONArray messages_arr=obj.getJSONArray("messages");
-                                for (int i=0; i<messages_arr.length();i++)
-                                {
-                                    JSONObject msgObj = messages_arr.getJSONObject(i);
-                                    Message message = new Message();
-                                    message.setMessagetxt(msgObj.getString("message"));
-                                    message.setSender(msgObj.getString("sender"));
-                                    message.setReceiver(msgObj.getString("receiver"));
-                                    message.setTime(msgObj.getString("msgtime"));
-                                    messages.add(message);
-                                }
-                                adapter.setList(messages);
-                                Toast.makeText(chatActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
-                            }
-                            else{
-                                Toast.makeText(chatActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(chatActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(chatActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
-                    }
-                });
-        RequestQueue queue2= Volley.newRequestQueue(chatActivity.this);
-        queue2.add(request2);
 
     }
 
@@ -324,6 +284,50 @@ public class chatActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(chatActivity.this);
         queue.add(request);
 
+    }
+
+    public void getMessages(String sender, String receiver){
+        StringRequest request=new StringRequest(
+                Request.Method.GET,
+                "https://chitchatsmd.000webhostapp.com/getMessages.php?sender="+sender + "&receiver=" + receiver,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject obj=new JSONObject(response);
+                            if(obj.getInt("code")==1)
+                            {
+                                JSONArray messages_arr=obj.getJSONArray("messages");
+                                for (int i=0; i<messages_arr.length();i++)
+                                {
+                                    JSONObject msgObj = messages_arr.getJSONObject(i);
+                                    Message message = new Message();
+                                    message.setMessagetxt(msgObj.getString("message"));
+                                    message.setSender(msgObj.getString("sender"));
+                                    message.setReceiver(msgObj.getString("receiver"));
+                                    message.setTime(msgObj.getString("msgtime"));
+                                    messages.add(message);
+                                }
+                                adapter.setList(messages);
+                                Toast.makeText(chatActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                            }
+                            else{
+                                Toast.makeText(chatActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(chatActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(chatActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
+                    }
+                });
+        RequestQueue queue= Volley.newRequestQueue(chatActivity.this);
+        queue.add(request);
     }
 
 }
