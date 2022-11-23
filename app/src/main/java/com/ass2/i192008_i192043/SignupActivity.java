@@ -29,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.onesignal.OneSignal;
 
 
 import org.json.JSONException;
@@ -151,6 +152,7 @@ public class SignupActivity extends AppCompatActivity {
                             params.put("bio",bio.getText().toString());
                             params.put("lastSeen", currentTime.format(calendar.getTime()));
                             params.put("onlineStatus", "online");
+                            params.put("playerid", OneSignal.getDeviceState().getUserId());
                             return params;
                         }
                     };

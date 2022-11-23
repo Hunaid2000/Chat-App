@@ -14,11 +14,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.onesignal.OneSignal;
+
 public class MainActivity extends AppCompatActivity {
     Animation topAnm, bottomAnm;
     ImageView logo_image;
     TextView logoText;
     User currentUser;
+    private static final String ONESIGNAL_APP_ID = "104a1154-86fd-4499-b831-6198e6ccf128";
 
     private static final int SPLASH_SCREEN= 3000;
     @Override
@@ -27,6 +30,17 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.black));
         setContentView(R.layout.activity_main);
         loadUser();
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this);
+        OneSignal.setAppId(ONESIGNAL_APP_ID);
+
+        // promptForPushNotifications will show the native Android notification permission prompt.
+        // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
+        OneSignal.promptForPushNotifications();
+
+        System.out.println("Contact ID: " + OneSignal.getDeviceState().getUserId());
 
         // Animation
         topAnm   = AnimationUtils.loadAnimation(this,R.anim.top_animation);

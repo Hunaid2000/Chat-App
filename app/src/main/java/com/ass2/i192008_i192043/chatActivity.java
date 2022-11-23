@@ -28,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jraska.falcon.Falcon;
+import com.onesignal.OneSignal;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -164,8 +165,23 @@ public class chatActivity extends AppCompatActivity {
                                     JSONObject obj=new JSONObject(response);
                                     if(obj.getInt("code")==1)
                                     {
-                                        msg.setText("");
+
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                                        OneSignal.postNotification(new JSONObject("{ 'include_player_ids': [ " + obj.getString("playerid") + " ]," +
+                                                "'contents': { 'en' : "+msg+" } ," +
+                                                " 'headings' :{'en':'Message'} }"), new OneSignal.PostNotificationResponseHandler() {
+                                            @Override
+                                            public void onSuccess(JSONObject jsonObject) {
+                                                Toast.makeText(chatActivity.this,"Notification sent",Toast.LENGTH_LONG).show();
+                                            }
+
+                                            @Override
+                                            public void onFailure(JSONObject jsonObject) {
+                                                Toast.makeText(chatActivity.this,"Notification Not sent",Toast.LENGTH_LONG).show();
+
+                                            }
+                                        });
+                                        msg.setText("");
                                     }
                                     else{
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
