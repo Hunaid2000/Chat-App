@@ -2,6 +2,7 @@ package com.ass2.i192008_i192043;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,6 +56,8 @@ public class chatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // remove top blue bar
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
         setContentView(R.layout.activity_chat);
         msg = findViewById(R.id.msg);
         send = findViewById(R.id.send);

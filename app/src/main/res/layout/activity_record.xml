@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".contactsActivity"
+    tools:context=".RecordActivity"
     android:background="@color/black"
     android:fitsSystemWindows="true"
     tools:openDrawer="left"
@@ -64,20 +64,20 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true">
 
-            <EditText
-                android:id="@+id/search_contacts_text"
-                android:layout_width="match_parent"
-                android:hint="Search contact"
-                android:textColorHint="@color/white"
-                android:layout_height="40dp"
-                android:includeFontPadding="true"
-                android:padding="10dp"
-                android:textColor="@color/white"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:drawableLeft="@drawable/search_icon_white"
-                android:drawablePadding="10dp"
-                android:background="@drawable/rectangle_button_yellow" />
+                <EditText
+                    android:id="@+id/search_contacts_text"
+                    android:layout_width="match_parent"
+                    android:hint="Search contact"
+                    android:textColorHint="@color/white"
+                    android:layout_height="40dp"
+                    android:includeFontPadding="true"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@drawable/search_icon_white"
+                    android:drawablePadding="10dp"
+                    android:background="@drawable/rectangle_button_yellow" />
 
             </LinearLayout>
         </RelativeLayout>
@@ -106,23 +106,8 @@
 
         </com.google.android.material.tabs.TabLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/contacts_rv"
-            android:layout_margin="20dp"
-            android:layout_width="match_parent"
-            android:layout_weight="0.8"
-            android:layout_height="0dp" />
 
-        <ImageButton
-            android:id="@+id/add_contact"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_margin="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:background="@drawable/sent_msg_box"
-            android:src="@drawable/add_icon"/>
+
 
     </LinearLayout>
 

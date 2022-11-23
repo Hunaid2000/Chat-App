@@ -3,6 +3,7 @@ package com.ass2.i192008_i192043;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
 import android.widget.EditText;
@@ -31,6 +32,8 @@ public class ForgetPasswordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // remove top blue bar
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
         setContentView(R.layout.activity_forgetpassword);
         back = findViewById(R.id.back);
         email_input = findViewById(R.id.email_input);

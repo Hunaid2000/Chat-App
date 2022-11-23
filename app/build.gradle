@@ -40,6 +40,5 @@ dependencies {
     implementation 'com.github.jeancsanchez:JcPlayer:2.7.2'
     implementation 'com.jraska:falcon:2.2.0'
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
-
     testImplementation "com.google.truth:truth:1.1.3"
 }

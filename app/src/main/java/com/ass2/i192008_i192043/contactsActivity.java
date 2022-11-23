@@ -3,6 +3,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,15 +58,20 @@ public class contactsActivity extends AppCompatActivity implements NavigationVie
     NavigationView navigationView;
     TextView userName;
     DrawerLayout drawerLayout;
+    TabLayout tableLayout;
 
     SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
+        // remove top blue bar
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+
         setContentView(R.layout.activity_contacts);
         contacts_rv = findViewById(R.id.contacts_rv);
         profileImg = findViewById(R.id.profile_image);
+        tableLayout= findViewById(R.id.tab_layout);
 
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigation_view);
@@ -162,7 +171,38 @@ public class contactsActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
+        // add onchange listener to the tab layout
+        tableLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(tab.getPosition()==1)
+                {
+                    Intent intent=new Intent(contactsActivity.this,RecordActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(tab.getPosition()==2)
+                {
+                    Intent intent=new Intent(contactsActivity.this,Call_log.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
     }
+
+
 
 
     private void addContactDailogbox() {
@@ -279,7 +319,6 @@ public class contactsActivity extends AppCompatActivity implements NavigationVie
                         JSONObject obj=new JSONObject(response);
                         if(obj.getInt("code")==1)
                         {
-
                         }
                         else{
                             Toast.makeText(contactsActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
