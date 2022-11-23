@@ -93,12 +93,15 @@ public class MainActivity extends AppCompatActivity {
             User.getCurrentUser().setBio(sharedPreferences.getString("bio", null));
             User.getCurrentUser().setGender(sharedPreferences.getString("gender",null));
             User.getCurrentUser().setProfileUrl(sharedPreferences.getString("profile",null));
-
             String previouslyEncodedImage = sharedPreferences.getString("image_data", null);
-            if( !previouslyEncodedImage.equalsIgnoreCase("") ){
-                byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-                User.getCurrentUser().setUserImg(bitmap);
+            if(previouslyEncodedImage!=null){
+                if( !previouslyEncodedImage.equalsIgnoreCase("") ){
+                    byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                    User.getCurrentUser().setUserImg(bitmap);
+                }
+            }else{
+                User.getCurrentUser().SetUserFromURl("https://chitchatsmd.000webhostapp.com/Images/"+User.getCurrentUser().getProfileUrl());
             }
             currentUser = User.getCurrentUser();
         }

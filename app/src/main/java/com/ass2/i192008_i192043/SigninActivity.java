@@ -124,6 +124,18 @@ public class SigninActivity extends AppCompatActivity {
                                 // get the profile image from the server and save it in the local storage
                                 User.getCurrentUser().SetUserFromURl("https://chitchatsmd.000webhostapp.com/Images/"+User.getCurrentUser().getProfileUrl());
                                 Log.d("Profile Url", "https://chitchatsmd.000webhostapp.com/Images/"+ User.getCurrentUser().getProfileUrl());
+                                SharedPreferences putUser = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+                                SharedPreferences.Editor editor = putUser.edit();
+
+                                editor.putString("id",  User.getCurrentUser().getUserId());
+                                editor.putString("name",  User.getCurrentUser().getName());
+                                editor.putString("phoneNumber",  User.getCurrentUser().getPhno());
+                                editor.putString("gender", User.getCurrentUser().getGender());
+                                editor.putString("bio", User.getCurrentUser().getBio());
+                                editor.putString("profile",User.getCurrentUser().getUserId()+".jpg");
+                                editor.commit();
+
+
                                 Toast.makeText(SigninActivity.this, "Sign in success", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(SigninActivity.this, contactsActivity.class);
                                 startActivity(intent);
