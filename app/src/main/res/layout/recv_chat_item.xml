@@ -9,7 +9,6 @@
 
     <ImageView
         android:id="@+id/recv_prof_pic"
-        android:layout_gravity="center"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:clipToOutline="true"

@@ -12,8 +12,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.1"
+        android:layout_weight="0.12"
         android:background="@drawable/chat_top_bar"
+        android:gravity="center"
         android:padding="15dp">
 
         <LinearLayout
@@ -68,7 +69,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="textStart"
-                    android:text="status"
                     android:textColor="@color/white"
                     android:textSize="14dp" />
 
@@ -113,7 +113,7 @@
         android:id="@+id/chats_rv"
         android:layout_margin="20dp"
         android:layout_width="match_parent"
-        android:layout_weight="0.8"
+        android:layout_weight="0.78"
         android:layout_height="0dp" />
 
     <RelativeLayout

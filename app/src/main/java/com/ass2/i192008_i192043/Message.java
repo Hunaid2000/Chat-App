@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Message {
+    private String messageId;
     private String messagetxt;
     private String sender;
     private String receiver;
@@ -54,4 +55,11 @@ public class Message {
         this.time = time;
     }
 
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
 }

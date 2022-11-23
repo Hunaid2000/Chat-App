@@ -302,6 +302,7 @@ public class chatActivity extends AppCompatActivity {
                                 {
                                     JSONObject msgObj = messages_arr.getJSONObject(i);
                                     Message message = new Message();
+                                    message.setMessageId(msgObj.getString("messageId"));
                                     message.setMessagetxt(msgObj.getString("message"));
                                     message.setSender(msgObj.getString("sender"));
                                     message.setReceiver(msgObj.getString("receiver"));
