@@ -17,6 +17,8 @@
         android:gravity="center"
         android:padding="15dp">
 
+
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,6 +86,20 @@
             android:layout_centerInParent="true"
             android:layout_alignParentRight="true"
             android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/screen_shot"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:background="@drawable/rectangle_button_yellow"
+                android:src="@drawable/screenshot"/>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="0dp"/>
+
             <ImageButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"

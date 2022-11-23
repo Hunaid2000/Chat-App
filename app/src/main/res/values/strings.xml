@@ -148,7 +148,7 @@
     <string name="music_list">Music List</string>
     <string name="forget_email">Enter your phone number</string>
     <string name="update_password">Enter update Password</string>
-    <string  name="submit">Submit</string>
+    <string name="submit">Submit</string>
 
     <!-- Assignment03 string    -->
     <string name="phone_Number">Phone Number</string>

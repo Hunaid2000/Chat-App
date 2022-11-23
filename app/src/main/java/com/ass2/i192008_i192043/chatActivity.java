@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.jraska.falcon.Falcon;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -51,6 +53,8 @@ public class chatActivity extends AppCompatActivity {
     MessageAdapter adapter;
     Calendar calendar= Calendar.getInstance();
     SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
+    ImageView screen_shot; //added
+
 
 
     @Override
@@ -68,6 +72,7 @@ public class chatActivity extends AppCompatActivity {
         recvName.setText(getIntent().getStringExtra("name"));
         String contactID = getIntent().getStringExtra("contactID");
         String recvProfileUrl = getIntent().getStringExtra("contactImg");
+        screen_shot= findViewById(R.id.screen_shot); //added
 
         try {
             Picasso.get().load("https://chitchatsmd.000webhostapp.com/Images/" + recvProfileUrl).fit().centerCrop().into(recvProfileImg);
@@ -120,7 +125,18 @@ public class chatActivity extends AppCompatActivity {
 
 
         back.setOnClickListener(v -> {
-            startActivity(new Intent(chatActivity.this, contactsActivity.class));
+           finish();
+        });
+
+        screen_shot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap = Falcon.takeScreenshotBitmap(chatActivity.this);
+                ScreenShotActivity.bitmap = bitmap;
+                Intent intent = new Intent(chatActivity.this, ScreenShotActivity.class);
+                startActivity(intent);
+                finish();
+            }
         });
 
 
