@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+
+
 public class RecordActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     User user;
     ImageView profile;
@@ -58,6 +60,8 @@ public class RecordActivity extends AppCompatActivity implements NavigationView.
         TabLayout.Tab tab = tableLayout.getTabAt(1);
         tab.select();
 
+        Record();
+
 
 
 
@@ -94,6 +98,23 @@ public class RecordActivity extends AppCompatActivity implements NavigationView.
     }
 
 
+    private  void  Record(){
+
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                // Great! User has recorded and saved the audio file
+            } else if (resultCode == RESULT_CANCELED) {
+                // Oops! User has canceled the recording
+            }
+        }
+    }
 
 
     @Override

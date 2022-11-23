@@ -1,4 +1,20 @@
 buildscript {
+    repositories {
+        mavenCentral{ //for mavenCentral, jcenter or any other used repository add excludeGroup
+            content {
+                excludeGroup "com.github.adrielcafe"
+                excludeGroup "com.kailashdabhi:om-recorder:1.1.0"
+            }
+        }
+        maven {
+            url "https://jitpack.io"
+            // for https://github.com/adrielcafe/AndroidAudioRecorder
+            content {
+                includeGroup "com.github.adrielcafe"
+                includeGroup "com.kailashdabhi:om-recorder:1.1.0"
+            }
+        }
+    }
     dependencies {
         classpath 'com.google.gms:google-services:4.3.14'
     }
