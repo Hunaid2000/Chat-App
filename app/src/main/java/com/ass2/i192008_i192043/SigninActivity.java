@@ -2,6 +2,7 @@ package com.ass2.i192008_i192043;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -116,6 +117,7 @@ public class SigninActivity extends AppCompatActivity {
                                 User.getCurrentUser().setPhno(user.getString("phoneNumber"));
                                 User.getCurrentUser().setBio(user.getString("bio"));
                                 User.getCurrentUser().setGender(user.getString("gender"));
+
                                 Toast.makeText(SigninActivity.this, "Sign in success", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(SigninActivity.this, contactsActivity.class);
                                 startActivity(intent);

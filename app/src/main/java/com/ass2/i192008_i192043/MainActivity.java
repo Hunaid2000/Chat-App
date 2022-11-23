@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         // Assign the animation
         logo_image.setAnimation(topAnm);
         logoText.setAnimation(bottomAnm);
-        getUser("2");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -76,46 +75,10 @@ public class MainActivity extends AppCompatActivity {
         },SPLASH_SCREEN);
     };
 
-    public void getUser(String id){
-        StringRequest request=new StringRequest(
-            Request.Method.GET,
-            "https://chitchatsmd.000webhostapp.com/getUserById.php?userId="+id,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject obj=new JSONObject(response);
-                        if(obj.getInt("code")==1)
-                        {
-                            JSONObject user=obj.getJSONObject("user");
-                            User.getCurrentUser().setName(user.getString("name"));
-                            User.getCurrentUser().setUserId(user.getString("userId"));
-                            User.getCurrentUser().setPhno(user.getString("phoneNumber"));
-                            User.getCurrentUser().setBio(user.getString("bio"));
-                            User.getCurrentUser().setProfileUrl(User.getCurrentUser().getUserId()+".jpg");
-                        }
-                        else{
-                            Toast.makeText(MainActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(MainActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(MainActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
-                }
-            });
-        RequestQueue queue= Volley.newRequestQueue(MainActivity.this);
-        queue.add(request);
-    }
 
     public void   loadUser(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String userId = sharedPreferences.getString("userId", null);
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+        String userId = sharedPreferences.getString("id", null);
         // if user is not logged in
         if (userId == null) {
             currentUser = null;
@@ -123,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             User.getCurrentUser().setUserId(userId);
             User.getCurrentUser().setName(sharedPreferences.getString("name", null));
-            User.getCurrentUser().setPhno(sharedPreferences.getString("phno", null));
+            User.getCurrentUser().setPhno(sharedPreferences.getString("phoneNumber", null));
             User.getCurrentUser().setBio(sharedPreferences.getString("bio", null));
             User.getCurrentUser().setGender(sharedPreferences.getString("gender",null));
             currentUser = User.getCurrentUser();

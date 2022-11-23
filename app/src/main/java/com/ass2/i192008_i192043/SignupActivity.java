@@ -7,9 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.InputType;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -32,17 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +41,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class SignupActivity extends AppCompatActivity {
     EditText name, phno, password, bio;
@@ -64,7 +50,6 @@ public class SignupActivity extends AppCompatActivity {
     RelativeLayout profileImageHolder;
     ImageView profileImage;
     Uri dpp;
-    FirebaseAuth mAuth;
     User user;
     TextView showPassword;
     Calendar calendar= Calendar.getInstance();
@@ -144,7 +129,7 @@ public class SignupActivity extends AppCompatActivity {
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(SignupActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SignupActivity.this,"Incorrect JSON user Insert", Toast.LENGTH_LONG).show();
                                 }
                             }
                         },
@@ -297,13 +282,14 @@ public class SignupActivity extends AppCompatActivity {
                                 if(obj.getInt("code")==1)
                                 {
                                     Toast.makeText(SignupActivity.this, "User Registered Successfully", Toast.LENGTH_LONG).show();
-                                    SharedPreferences putUser = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                    SharedPreferences putUser = getSharedPreferences("MySharedPref",MODE_PRIVATE);
                                     SharedPreferences.Editor editor = putUser.edit();
                                     editor.putString("id", user.getUserId());
                                     editor.putString("name", user.getName());
                                     editor.putString("phoneNumber", user.getPhno());
                                     editor.putString("gender",user.getGender());
                                     editor.putString("bio",user.getBio());
+                                    editor.commit();
 
                                     User.getCurrentUser().setUserId(user.getUserId());
                                     User.getCurrentUser().setName(user.getName());
@@ -318,8 +304,10 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
+                                // write the response to log
+                                Log.d("Id", "Some thing went wrong");
                                 e.printStackTrace();
-                                Toast.makeText(SignupActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SignupActivity.this,"Incorrect JSON Image", Toast.LENGTH_LONG).show();
                             }
                         }
                     },
