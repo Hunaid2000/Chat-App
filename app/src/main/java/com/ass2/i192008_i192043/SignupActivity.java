@@ -2,10 +2,12 @@ package com.ass2.i192008_i192043;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
@@ -61,7 +63,7 @@ public class SignupActivity extends AppCompatActivity {
     ImageView profileImage;
     Uri dpp;
     FirebaseAuth mAuth;
-    FirebaseUser User;
+    User user;
     TextView showPassword;
 
 
@@ -74,6 +76,7 @@ public class SignupActivity extends AppCompatActivity {
         phno = findViewById(R.id.phno);
         password = findViewById(R.id.password);
         bio = findViewById(R.id.bio);
+        user = new User();
 
         genderImage1 = findViewById(R.id.gender_male);
         genderImage2 = findViewById(R.id.gender_female);
@@ -113,7 +116,6 @@ public class SignupActivity extends AppCompatActivity {
                 }
                 if (ValidateInput()) {
                     // save the user to local storage sqlite
-                    User user = new User();
                     user.setName(name.getText().toString());
                     user.setGender(gender);
                     user.setBio(bio.getText().toString());
@@ -131,8 +133,8 @@ public class SignupActivity extends AppCompatActivity {
                                     if(obj.getInt("code")==1)
                                     {
                                         user.setUserId(String.valueOf(obj.getInt("id")));
+                                        // set the current user
                                         uploadUserImage(user.getUserId());
-
                                     }
                                     else{
                                         Toast.makeText(SignupActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -290,6 +292,20 @@ public class SignupActivity extends AppCompatActivity {
                                 if(obj.getInt("code")==1)
                                 {
                                     Toast.makeText(SignupActivity.this, "User Registered Successfully", Toast.LENGTH_LONG).show();
+                                    SharedPreferences putUser = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                    SharedPreferences.Editor editor = putUser.edit();
+                                    editor.putString("id", user.getUserId());
+                                    editor.putString("name", user.getName());
+                                    editor.putString("phoneNumber", user.getPhno());
+                                    editor.putString("gender",user.getGender());
+                                    editor.putString("bio",user.getBio());
+
+                                    User.getCurrentUser().setUserId(user.getUserId());
+                                    User.getCurrentUser().setName(user.getName());
+                                    User.getCurrentUser().setPhno(user.getPhno());
+                                    User.getCurrentUser().setBio(user.getBio());
+                                    User.getCurrentUser().setGender(user.getGender());
+
                                     Intent intent = new Intent(SignupActivity.this, contactsActivity.class);
                                     startActivity(intent);
                                 }

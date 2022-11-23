@@ -1,8 +1,10 @@
 package com.ass2.i192008_i192043;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -34,13 +36,15 @@ public class MainActivity extends AppCompatActivity {
     Animation topAnm, bottomAnm;
     ImageView logo_image;
     TextView logoText;
-    User User;
+    User currentUser;
+
     private static final int SPLASH_SCREEN= 3000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.black));
         setContentView(R.layout.activity_main);
+        loadUser();
 
         // Animation
         topAnm   = AnimationUtils.loadAnimation(this,R.anim.top_animation);
@@ -53,9 +57,6 @@ public class MainActivity extends AppCompatActivity {
         // Assign the animation
         logo_image.setAnimation(topAnm);
         logoText.setAnimation(bottomAnm);
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
         getUser("2");
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, contactsActivity.class);
                 }else{
                     // intent to the login activity
-                    intent = new Intent(MainActivity.this, loginActivity.class);
+                    intent = new Intent(MainActivity.this, SigninActivity.class);
 
                 }
                 startActivity(intent);
@@ -111,4 +112,22 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue queue= Volley.newRequestQueue(MainActivity.this);
         queue.add(request);
     }
+
+    public void   loadUser(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String userId = sharedPreferences.getString("userId", null);
+        // if user is not logged in
+        if (userId == null) {
+            currentUser = null;
+            return;
+        }else{
+            User.getCurrentUser().setUserId(userId);
+            User.getCurrentUser().setName(sharedPreferences.getString("name", null));
+            User.getCurrentUser().setPhno(sharedPreferences.getString("phno", null));
+            User.getCurrentUser().setBio(sharedPreferences.getString("bio", null));
+            User.getCurrentUser().setGender(sharedPreferences.getString("gender",null));
+            currentUser = User.getCurrentUser();
+        }
+    }
+
 }
