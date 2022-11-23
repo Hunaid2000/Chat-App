@@ -23,10 +23,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.jraska.falcon.Falcon;
 import com.squareup.picasso.Picasso;
 
@@ -53,8 +49,7 @@ public class chatActivity extends AppCompatActivity {
     MessageAdapter adapter;
     Calendar calendar= Calendar.getInstance();
     SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
-    ImageView screen_shot; //added
-
+    ImageView screen_shot;
 
 
     @Override

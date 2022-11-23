@@ -150,7 +150,7 @@ public class contactsActivity extends AppCompatActivity implements NavigationVie
                     }
                 }
 
-                if(filteredContacts.isEmpty()){
+                if(filteredContacts.isEmpty() && !search.isEmpty()){
                     Toast.makeText(contactsActivity.this, "No contacts found", Toast.LENGTH_SHORT).show();
                 }
                 adapter.setList(filteredContacts);

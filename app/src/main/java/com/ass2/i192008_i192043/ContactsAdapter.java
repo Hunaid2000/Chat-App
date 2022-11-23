@@ -18,12 +18,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -121,10 +115,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                                 }
                                 lastMsg.setText(messages.get(messages.size()-1).getMessagetxt());
                                 lastMsgTime.setText(messages.get(messages.size()-1).getTime());
-//                                Toast.makeText(context, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
                             }
                             else{
-//                                Toast.makeText(context, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
