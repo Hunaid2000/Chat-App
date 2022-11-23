@@ -50,6 +50,8 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -65,6 +67,8 @@ public class SignupActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     User user;
     TextView showPassword;
+    Calendar calendar= Calendar.getInstance();
+    SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
 
 
     @Override
@@ -87,7 +91,6 @@ public class SignupActivity extends AppCompatActivity {
         signupButton = findViewById(R.id.sign_up);
         profileImage = findViewById(R.id.dp);
         profileImageHolder = findViewById(R.id.profile_image);
-        mAuth = FirebaseAuth.getInstance();
 
         AddEventListenerForGender();
         showPassword= findViewById(R.id.showPassword);
@@ -161,6 +164,8 @@ public class SignupActivity extends AppCompatActivity {
                             params.put("password",password.getText().toString());
                             params.put("gender",gender);
                             params.put("bio",bio.getText().toString());
+                            params.put("lastSeen", currentTime.format(calendar.getTime()));
+                            params.put("onlineStatus", "online");
                             return params;
                         }
                     };
