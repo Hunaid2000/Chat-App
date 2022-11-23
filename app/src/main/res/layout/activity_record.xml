@@ -28,6 +28,7 @@
             android:padding="15dp">
 
             <RelativeLayout
+
                 android:layout_width="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_height="wrap_content">
@@ -37,7 +38,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerInParent="true"
-                    android:background="@null"
                     android:src="@drawable/back_icon"/>
 
                 <TextView
@@ -105,11 +105,10 @@
                 />
 
         </com.google.android.material.tabs.TabLayout>
-
-
-
-
     </LinearLayout>
+
+
+
 
     <com.google.android.material.navigation.NavigationView
         android:background="@color/black"
