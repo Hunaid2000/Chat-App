@@ -60,7 +60,7 @@ public class chatActivity extends AppCompatActivity {
     SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
     ImageView screen_shot;
     String contactID;
-    List<String> encodedImgs = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +134,7 @@ public class chatActivity extends AppCompatActivity {
 
 
         back.setOnClickListener(v -> {
-           finish();
+            startActivity(new Intent(chatActivity.this,contactsActivity.class));
         });
 
         screen_shot.setOnClickListener(new View.OnClickListener() {
@@ -195,6 +195,7 @@ public class chatActivity extends AppCompatActivity {
                                             }
                                         });
                                         msg.setText("");
+                                        getMessages(user.getUserId(), contactID);
                                     }
                                     else{
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -398,6 +399,7 @@ public class chatActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == RESULT_OK) {
+            List<String> encodedImgs = new ArrayList<>();
             if(data.getClipData() != null) {
                 int count = data.getClipData().getItemCount();
                 for(int i = 0; i < count; i++) {
@@ -430,61 +432,62 @@ public class chatActivity extends AppCompatActivity {
                 encodedImgs.add(Base64.encodeToString(byteArray, Base64.DEFAULT));
             }
 
-        }
+            ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
 
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Uploading...");
-        progressDialog.show();
-
-        RequestQueue queue;
-        for (String encodedImage : encodedImgs) {
-            StringRequest request=new StringRequest(
-                    Request.Method.POST,
-                    "https://chitchatsmd.000webhostapp.com/imgMessageInsert.php",
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                JSONObject obj=new JSONObject(response);
-                                if(obj.getInt("code")==1)
-                                {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+            RequestQueue queue;
+            for (String encodedImage : encodedImgs) {
+                StringRequest request=new StringRequest(
+                        Request.Method.POST,
+                        "https://chitchatsmd.000webhostapp.com/imgMessageInsert.php",
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject obj=new JSONObject(response);
+                                    if(obj.getInt("code")==1)
+                                    {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                                        getMessages(user.getUserId(), contactID);
+                                    }
+                                    else{
+                                        Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(chatActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
                                 }
-                                else{
-                                    Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                Toast.makeText(chatActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
                             }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(chatActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
-                        }
-                    })
-            {
-                @Nullable
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> params=new HashMap<>();
-                    params.put("sender", user.getUserId());
-                    params.put("receiver", contactID);
-                    String msgtime = currentTime.format(calendar.getTime());
-                    params.put("msgtime", msgtime);
-                    params.put("message", "_"+user.getUserId()+"_"+contactID+"_"+msgtime+".jpg");
-                    params.put("msgtype", "2");
-                    params.put("img", encodedImage);
-                    return params;
-                }
-            };
-            queue = Volley.newRequestQueue(chatActivity.this);
-            queue.add(request);
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(chatActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                {
+                    @Nullable
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params=new HashMap<>();
+                        params.put("sender", user.getUserId());
+                        params.put("receiver", contactID);
+                        String msgtime = currentTime.format(calendar.getTime());
+                        params.put("msgtime", msgtime);
+                        params.put("message", "_"+user.getUserId()+"_"+contactID+"_"+msgtime+".jpg");
+                        params.put("msgtype", "2");
+                        params.put("img", encodedImage);
+                        return params;
+                    }
+                };
+                queue = Volley.newRequestQueue(chatActivity.this);
+                queue.add(request);
+            }
+            encodedImgs.clear();
+
         }
-        encodedImgs.clear();
 
     }
 
