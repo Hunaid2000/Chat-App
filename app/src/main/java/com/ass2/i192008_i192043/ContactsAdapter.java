@@ -1,5 +1,6 @@
 package com.ass2.i192008_i192043;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -46,7 +47,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         String contactName = contactsList.get(position).getName();
         contactId = contactsList.get(position).getUserId();
 //        String contactTime = contactsList.get(position).getLastSeen();
@@ -66,6 +67,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                 intent.putExtra("name", holder.contactName.getText().toString());
                 intent.putExtra("contactID", contactsList.get(position).getUserId());
                 intent.putExtra("contactImg", contactImg);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

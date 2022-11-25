@@ -16,17 +16,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="1"
-        tools:context=".chatActivity"
         android:background="@color/black">
-
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".08"
+            android:id="@+id/tab_layout"
+            android:background="@drawable/chat_top_bar"
+            app:tabSelectedTextColor="#fff"
+            app:tabIndicatorColor="#fff"
+            app:tabTextColor="#fff"/>
         <RelativeLayout
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/msgbar"
-            android:layout_weight="0.2"
+            android:layout_weight=".08"
             android:background="@drawable/chat_top_bar"
-            android:padding="15dp">
-
+            android:paddingHorizontal="15dp">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_alignParentTop="true"
@@ -58,73 +65,16 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/artist_2"/>
             </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true">
-
-            <EditText
-                android:id="@+id/search_contacts_text"
-                android:layout_width="match_parent"
-                android:hint="Search contact"
-                android:textColorHint="@color/white"
-                android:layout_height="40dp"
-                android:includeFontPadding="true"
-                android:padding="10dp"
-                android:textColor="@color/white"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:drawableLeft="@drawable/search_icon_white"
-                android:drawablePadding="10dp"
-                android:background="@drawable/rectangle_button_yellow" />
-
-            </LinearLayout>
         </RelativeLayout>
-        <com.google.android.material.tabs.TabLayout
-            android:layout_height="wrap_content"
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_paper"
             android:layout_width="match_parent"
-            android:id="@+id/tab_layout"
-            >
-
-            <com.google.android.material.tabs.TabItem
-                android:text="Chats"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="Records"
-                />
-            <com.google.android.material.tabs.TabItem
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="Call logs"
-                />
-
-        </com.google.android.material.tabs.TabLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/contacts_rv"
-            android:layout_margin="20dp"
-            android:layout_width="match_parent"
-            android:layout_weight="0.8"
-            android:layout_height="0dp" />
-
-        <ImageButton
-            android:id="@+id/add_contact"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_margin="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:background="@drawable/sent_msg_box"
-            android:src="@drawable/add_icon"/>
-
+            android:layout_height="0dp"
+            android:layout_weight=".84"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </LinearLayout>
+
 
     <com.google.android.material.navigation.NavigationView
         android:background="@color/black"
