@@ -2,17 +2,24 @@ package com.ass2.i192008_i192043;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Base64;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -35,8 +42,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,7 +64,7 @@ public class chatActivity extends AppCompatActivity {
     ImageView recvProfileImg;
     TextView recvName, recvStatus;
     RecyclerView chat_rv;
-    ImageButton back, selectImage;
+    ImageButton back, selectImage, voiceRecord;
     ArrayList<Message> messages;
     MessageAdapter adapter;
     Calendar calendar= Calendar.getInstance();
@@ -61,6 +72,9 @@ public class chatActivity extends AppCompatActivity {
     ImageView screen_shot;
     String contactID;
     ImageView call_icon;
+    private static int MIC_PERMISSION_CODE = 200;
+    private static int RECORDING_NUMBER = 0;
+    MediaRecorder mediaRecorder;
 
 
     @Override
@@ -74,6 +88,7 @@ public class chatActivity extends AppCompatActivity {
         send = findViewById(R.id.send);
         back = findViewById(R.id.back_bt);
         chat_rv = findViewById(R.id.chats_rv);
+        voiceRecord = findViewById(R.id.record);
         recvProfileImg = findViewById(R.id.recv_prof_pic_top);
         recvName = findViewById(R.id.recv_name);
         recvStatus = findViewById(R.id.recv_status);
@@ -133,6 +148,35 @@ public class chatActivity extends AppCompatActivity {
         adapter = new MessageAdapter(messages, this);
         chat_rv.setAdapter(adapter);
         chat_rv.setLayoutManager(new LinearLayoutManager(this));
+
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                if (isMicrophoneAvailable()) {
+                    getMicrophonePermission();
+                }
+            }
+        };
+        t.start();
+
+         voiceRecord.setOnTouchListener(new View.OnTouchListener() {
+             @Override
+             public boolean onTouch(View v, MotionEvent event) {
+                 switch (event.getAction()) {
+                     case MotionEvent.ACTION_DOWN:
+                         startRecording();
+                         Toast.makeText(chatActivity.this, "Recording Started", Toast.LENGTH_SHORT).show();
+                         break;
+                     case MotionEvent.ACTION_UP:
+                         stopRecording();
+                         Toast.makeText(chatActivity.this, "Recording Stopped", Toast.LENGTH_SHORT).show();
+                         break;
+                 }
+                 return false;
+             }
+         });
+
 
 
         back.setOnClickListener(v -> {
@@ -501,5 +545,108 @@ public class chatActivity extends AppCompatActivity {
 
     }
 
+
+    private void startRecording() {
+        try {
+            mediaRecorder = new MediaRecorder();
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            RECORDING_NUMBER++;
+            mediaRecorder.setOutputFile(getRecordingFilePath());
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private String encodeRecording(){
+        File file = new File(getRecordingFilePath());
+        byte[] bytes = new byte[(int) file.length()];
+        try {
+            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+
+    }
+
+    private void stopRecording() {
+        mediaRecorder.stop();
+        mediaRecorder.release();
+
+        String encodedAudio = encodeRecording();
+        StringRequest request=new StringRequest(
+            Request.Method.POST,
+            "https://chitchatsmd.000webhostapp.com/recordingMessageInsert.php",
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject obj=new JSONObject(response);
+                        if(obj.getInt("code")==1)
+                        {
+                            Toast.makeText(chatActivity.this,obj.getString("msg"), Toast.LENGTH_LONG).show();
+                            getMessages(user.getUserId(), contactID);
+                        }
+                        else{
+                            Toast.makeText(chatActivity.this,obj.getString("msg"), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(chatActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
+                    }
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(chatActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
+                }
+            })
+        {
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params=new HashMap<>();
+                params.put("sender", user.getUserId());
+                params.put("receiver", contactID);
+                String msgtime = currentTime.format(calendar.getTime());
+                params.put("msgtime", msgtime);
+                params.put("message", "_"+user.getUserId()+"_"+contactID+"_"+msgtime+".mp3");
+                params.put("msgtype", "3");
+                params.put("recording", encodedAudio);
+                return params;
+            }
+        };
+        RequestQueue queue= Volley.newRequestQueue(chatActivity.this);
+        queue.add(request);
+
+        mediaRecorder = null;
+    }
+
+    private String getRecordingFilePath() {
+        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+        File musicDirectory = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
+        File file = new File(musicDirectory, "recording" + (RECORDING_NUMBER) + ".mp3");
+        return file.getPath();
+    }
+
+    private void getMicrophonePermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.RECORD_AUDIO}, MIC_PERMISSION_CODE);
+        }
+    }
+
+    private boolean isMicrophoneAvailable() {
+        return this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MICROPHONE);
+    }
 
 }
