@@ -210,36 +210,45 @@ public class chatActivity extends AppCompatActivity {
                                     JSONObject obj=new JSONObject(response);
                                     if(obj.getInt("code")==1)
                                     {
-                                        JSONObject json = null;
-                                        try {
-                                            json= new JSONObject("{ 'include_player_ids': [ '" + playerid + "' ]," +
-                                                    "'contents': { 'en' : '"+message+"' } ," +
-                                                    " 'headings' :{'en':'Message'} }");
-
-                                            System.out.println("json: "+json);
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-
-                                            Toast.makeText(chatActivity.this,"JSON Error",Toast.LENGTH_LONG).show();
-                                        }
-
-
-                                        Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
-                                        OneSignal.postNotification(json, new OneSignal.PostNotificationResponseHandler() {
-                                            @Override
-                                            public void onSuccess(JSONObject jsonObject) {
-                                                Toast.makeText(chatActivity.this,"Notification sent",Toast.LENGTH_LONG).show();
-                                            }
-
-                                            @Override
-                                            public void onFailure(JSONObject jsonObject) {
-                                                Toast.makeText(chatActivity.this,"Notification Not sent",Toast.LENGTH_LONG).show();
-
-                                            }
-                                        });
                                         msg.setText("");
-                                        getMessages(user.getUserId(), contactID);
+                                        Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+
+//                                        JSONObject json = null;
+//                                        try {
+//                                            json= new JSONObject("{ 'include_player_ids': [ '" + playerid + "' ]," +
+//                                                    "'contents': { 'en' : '"+message+"' } ," +
+//                                                    " 'headings' :{'en':'Message'} }");
+//
+//                                            System.out.println("json: "+json);
+//
+//                                        } catch (JSONException e) {
+//                                            e.printStackTrace();
+//
+//                                            Toast.makeText(chatActivity.this,"JSON Error",Toast.LENGTH_LONG).show();
+//                                        }
+//
+//                                        OneSignal.postNotification(json, new OneSignal.PostNotificationResponseHandler() {
+//                                            @Override
+//                                            public void onSuccess(JSONObject jsonObject) {
+//                                                Toast.makeText(chatActivity.this,"Notification sent",Toast.LENGTH_LONG).show();
+//                                            }
+//
+//                                            @Override
+//                                            public void onFailure(JSONObject jsonObject) {
+//                                                Toast.makeText(chatActivity.this,"Notification Not sent",Toast.LENGTH_LONG).show();
+//
+//                                            }
+//                                        });
+
+                                        Message msg = new Message();
+                                        msg.setMessageId(obj.getString("id"));
+                                        msg.setMessagetxt(message);
+                                        msg.setSender(user.getUserId());
+                                        msg.setReceiver(contactID);
+                                        msg.setTime(obj.getString("msgtime"));
+                                        msg.setMsgtype("1");
+                                        messages.add(msg);
+                                        adapter.setList(messages);
                                     }
                                     else{
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -477,7 +486,7 @@ public class chatActivity extends AppCompatActivity {
             }
 
             ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
+            progressDialog.setTitle("Uploading Image...");
             progressDialog.show();
 
             RequestQueue queue;
@@ -494,7 +503,16 @@ public class chatActivity extends AppCompatActivity {
                                     {
                                         progressDialog.dismiss();
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
-                                        getMessages(user.getUserId(), contactID);
+
+                                        Message msg = new Message();
+                                        msg.setMessageId(obj.getString("id"));
+                                        msg.setMessagetxt(obj.getString("message"));
+                                        msg.setSender(user.getUserId());
+                                        msg.setReceiver(contactID);
+                                        msg.setTime(obj.getString("msgtime"));
+                                        msg.setMsgtype("2");
+                                        messages.add(msg);
+                                        adapter.setList(messages);
                                     }
                                     else{
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -572,6 +590,10 @@ public class chatActivity extends AppCompatActivity {
         mediaRecorder.stop();
         mediaRecorder.release();
 
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading Recording...");
+        progressDialog.show();
+
         String encodedAudio = encodeRecording();
         StringRequest request=new StringRequest(
             Request.Method.POST,
@@ -583,8 +605,18 @@ public class chatActivity extends AppCompatActivity {
                         JSONObject obj=new JSONObject(response);
                         if(obj.getInt("code")==1)
                         {
+                            progressDialog.dismiss();
                             Toast.makeText(chatActivity.this,obj.getString("msg"), Toast.LENGTH_LONG).show();
-                            getMessages(user.getUserId(), contactID);
+
+                            Message msg = new Message();
+                            msg.setMessageId(obj.getString("id"));
+                            msg.setMessagetxt(obj.getString("message"));
+                            msg.setSender(user.getUserId());
+                            msg.setReceiver(contactID);
+                            msg.setTime(obj.getString("msgtime"));
+                            msg.setMsgtype("3");
+                            messages.add(msg);
+                            adapter.setList(messages);
                         }
                         else{
                             Toast.makeText(chatActivity.this,obj.getString("msg"), Toast.LENGTH_LONG).show();
@@ -640,3 +672,4 @@ public class chatActivity extends AppCompatActivity {
     }
 
 }
+
