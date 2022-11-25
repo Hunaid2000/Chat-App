@@ -122,6 +122,7 @@ public class SignupActivity extends AppCompatActivity {
                                     if(obj.getInt("code")==1)
                                     {
                                         user.setUserId(String.valueOf(obj.getInt("id")));
+                                        user.setPlayerid(obj.getString("playerid"));
                                         // set the current user
                                         uploadUserImage(user.getUserId());
                                     }

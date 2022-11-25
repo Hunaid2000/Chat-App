@@ -95,6 +95,114 @@ public class contactsActivity extends AppCompatActivity implements NavigationVie
         tableLayout.setupWithViewPager(viewPager);
         profileImg.setImageBitmap(user.getUserImg());
 
+        contacts = new ArrayList<>();
+        adapter = new ContactsAdapter(contacts, this);
+        contacts_rv.setAdapter(adapter);
+        contacts_rv.setLayoutManager(new LinearLayoutManager(this));
+
+
+        StringRequest request=new StringRequest(
+            Request.Method.GET,
+            "https://chitchatsmd.000webhostapp.com/getContactsById.php?userId="+user.getUserId(),
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject obj=new JSONObject(response);
+                        if(obj.getInt("code")==1)
+                        {
+                            JSONArray users=obj.getJSONArray("users");
+                            for (int i=0; i<users.length();i++)
+                            {
+                                JSONObject userObj = users.getJSONObject(i);
+                                User contact = new User();
+                                contact.setName(userObj.getString("name"));
+                                contact.setUserId(userObj.getString("userId"));
+                                contact.setProfileUrl(contact.getUserId()+".jpg");
+                                contacts.add(contact);
+                            }
+                            adapter.setList(contacts);
+                            Toast.makeText(contactsActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(contactsActivity.this, obj.get("msg").toString(), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(contactsActivity.this,"Incorrect JSON", Toast.LENGTH_LONG).show();
+                    }
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(contactsActivity.this,"Cannot Connect to the Server", Toast.LENGTH_LONG).show();
+                }
+            });
+        RequestQueue queue= Volley.newRequestQueue(contactsActivity.this);
+        queue.add(request);
+
+        addContact.setOnClickListener(v -> {
+            addContactDailogbox();
+        });
+
+        searchContactText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String search = s.toString().toLowerCase();
+                ArrayList<User> filteredContacts = new ArrayList<>();
+                for (int i = 0; i < contacts.size(); i++) {
+                    if (contacts.get(i).getName().toLowerCase().contains(search.toLowerCase())) {
+                        filteredContacts.add(contacts.get(i));
+                    }
+                }
+
+                if(filteredContacts.isEmpty() && !search.isEmpty()){
+                    Toast.makeText(contactsActivity.this, "No contacts found", Toast.LENGTH_SHORT).show();
+                }
+                adapter.setList(filteredContacts);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // add onchange listener to the tab layout
+        tableLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(tab.getPosition()==1)
+                {
+                    Intent intent=new Intent(contactsActivity.this,RecordActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(tab.getPosition()==2)
+                {
+                    Intent intent=new Intent(contactsActivity.this,Call_log.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
     }
 
 

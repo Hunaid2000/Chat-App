@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView logo_image;
     TextView logoText;
     User currentUser;
-    private static final String ONESIGNAL_APP_ID = "104a1154-86fd-4499-b831-6198e6ccf128";
+    private static final String ONESIGNAL_APP_ID = "0ea59906-b1a9-4034-b5be-c0f50eba5c9b";
 
     private static final int SPLASH_SCREEN= 3000;
     @Override
