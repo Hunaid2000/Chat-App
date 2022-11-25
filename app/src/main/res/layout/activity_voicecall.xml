@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".voicecallActivity"
-    android:background="#5EBCF3DD">
+    android:background="@color/black">
 
     <RelativeLayout
         android:id="@+id/topPanel"
@@ -16,23 +16,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Sample user"
+            android:text="User Name"
             android:textSize="28sp"
             android:layout_marginTop="25dp"
-            android:background="@color/white"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/white"/>
 
         <TextView
             android:id="@+id/callState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Incoming Voice Call"
+            android:text="Connecting..."
             android:textSize="16sp"
             android:textAllCaps="true"
             android:layout_below="@id/remoteUser"
             android:layout_marginTop="10dp"
-            android:background="@color/white"
+            android:textColor="@color/white"
             />
 
         <TextView
@@ -42,11 +41,11 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="10dp"
-            android:text="00:00"
+            android:text=""
             android:textSize="16sp"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/callState"
-            android:background="@color/white"
+            android:textColor="@color/white"
             />
 
 

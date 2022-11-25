@@ -6,7 +6,6 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 

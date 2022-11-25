@@ -76,6 +76,7 @@ public class chatActivity extends AppCompatActivity {
     private static int MIC_PERMISSION_CODE = 200;
     private static int RECORDING_NUMBER = 0;
     MediaRecorder mediaRecorder;
+    ImageView video_call_icon;
 
 
     @Override
@@ -99,6 +100,7 @@ public class chatActivity extends AppCompatActivity {
         contactID = getIntent().getStringExtra("contactID");
         String recvProfileUrl = getIntent().getStringExtra("contactImg");
         screen_shot= findViewById(R.id.screen_shot); //added
+        video_call_icon= findViewById(R.id.video_call_icon);
 
         try {
             Picasso.get().load("https://chitchatsmd.000webhostapp.com/Images/" + recvProfileUrl).fit().centerCrop().into(recvProfileImg);
@@ -159,8 +161,7 @@ public class chatActivity extends AppCompatActivity {
             }
         };
         t.start();
-
-         voiceRecord.setOnTouchListener(new View.OnTouchListener() {
+        voiceRecord.setOnTouchListener(new View.OnTouchListener() {
              @Override
              public boolean onTouch(View v, MotionEvent event) {
                  switch (event.getAction()) {
@@ -176,7 +177,6 @@ public class chatActivity extends AppCompatActivity {
                  return false;
              }
          });
-
 
 
         back.setOnClickListener(v -> {
@@ -277,6 +277,14 @@ public class chatActivity extends AppCompatActivity {
         getMessages(user.getUserId(), contactID);
 
         call_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), voicecallActivity.class);
+//                intent.setData(Uri.parse("tel:" + contactNumber));
+                startActivity(intent);
+            }
+        });
+        video_call_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), IncomingCall.class);
