@@ -18,7 +18,6 @@ public class User {
     String gender;
     String status;
     String lastSeen;
-    String playerid;
     Bitmap userImg;
 
     public Bitmap getUserImg() {
@@ -148,13 +147,5 @@ public class User {
         });
         thread.start();
 
-    }
-
-    public String getPlayerid() {
-        return playerid;
-    }
-
-    public void setPlayerid(String playerid) {
-        this.playerid = playerid;
     }
 }
