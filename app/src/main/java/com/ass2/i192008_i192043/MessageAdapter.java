@@ -3,10 +3,12 @@ package com.ass2.i192008_i192043;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,9 +42,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int sent_chat_item = 1;
     public static final int sent_img_item = 2;
     public static final int recv_img_item = 3;
+    public static final int sent_recording_item = 4;
+    public static final int recv_recording_item = 5;
     private List<Message> messagesList;
     private Context context;
     User user;
+    MediaPlayer mediaPlayer;
 
     public MessageAdapter(List<Message> messagesList, Context context) {
         this.messagesList = messagesList;
@@ -65,8 +70,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_img_item, parent, false);
             return new ViewHolder(view);
         }
-        else {
+        else if(viewType == recv_img_item) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recv_img_item, parent, false);
+            return new ViewHolder(view);
+        }
+        else if(viewType == sent_recording_item) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_recording_item, parent, false);
+            return new ViewHolder(view);
+        }
+        else{
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recv_recording_item, parent, false);
             return new ViewHolder(view);
         }
     }
@@ -83,6 +96,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if(messagesList.get(position).getMsgtype().equals("2")){
             setImg("https://chitchatsmd.000webhostapp.com/ChatImages/" +message, holder.msgImg);
+        }
+        else if(messagesList.get(position).getMsgtype().equals("3")){
+            holder.msg_recording.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    playRecording(message);
+                }
+            });
         }
 
         holder.msg_time.setText(time);
@@ -246,11 +267,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView msg, msg_time;
         ImageView recv_prof_pic, sent_prof_pic, msgImg;
+        ImageButton msg_recording;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             msg = itemView.findViewById(R.id.msg);
             msgImg = itemView.findViewById(R.id.msgImg);
+            msg_recording = itemView.findViewById(R.id.msg_recording);
             msg_time = itemView.findViewById(R.id.msg_time);
             recv_prof_pic = itemView.findViewById(R.id.recv_prof_pic);
             sent_prof_pic = itemView.findViewById(R.id.sent_prof_pic);
@@ -266,6 +289,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             else if(messagesList.get(position).getMsgtype().equals("2")){
                 return sent_img_item;
             }
+            else{
+                return sent_recording_item;
+            }
         }
         else {
             if(messagesList.get(position).getMsgtype().equals("1")){
@@ -274,8 +300,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             else if(messagesList.get(position).getMsgtype().equals("2")){
                 return recv_img_item;
             }
+            else{
+                return recv_recording_item;
+            }
         }
-        return -1;
     }
 
     public void setList(List<Message> newList) {
@@ -314,6 +342,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         });
         thread.start();
 
+    }
+
+    public void playRecording(String message) {
+        mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource("https://chitchatsmd.000webhostapp.com/ChatRecordings/" + message);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            Toast.makeText(context, "Playing Recording", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error in playing", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

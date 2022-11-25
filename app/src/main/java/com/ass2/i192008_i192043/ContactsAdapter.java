@@ -114,6 +114,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                                     {
                                         message.setMessagetxt("Image");
                                     }
+                                    else if(msgObj.getString("message").contains("mp3"))
+                                    {
+                                        message.setMessagetxt("Recording");
+                                    }
                                     else
                                     {
                                         message.setMessagetxt(msgObj.getString("message"));
