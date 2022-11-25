@@ -60,6 +60,7 @@ public class chatActivity extends AppCompatActivity {
     SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
     ImageView screen_shot;
     String contactID;
+    ImageView call_icon;
 
 
     @Override
@@ -76,6 +77,7 @@ public class chatActivity extends AppCompatActivity {
         recvProfileImg = findViewById(R.id.recv_prof_pic_top);
         recvName = findViewById(R.id.recv_name);
         recvStatus = findViewById(R.id.recv_status);
+        call_icon= findViewById(R.id.call_icon);
         user = user.getCurrentUser();
         recvName.setText(getIntent().getStringExtra("name"));
         contactID = getIntent().getStringExtra("contactID");
@@ -246,6 +248,14 @@ public class chatActivity extends AppCompatActivity {
 
         getMessages(user.getUserId(), contactID);
 
+        call_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), IncomingCall.class);
+//                intent.setData(Uri.parse("tel:" + contactNumber));
+                startActivity(intent);
+            }
+        });
     }
 
 
