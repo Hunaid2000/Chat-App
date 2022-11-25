@@ -225,7 +225,7 @@ public class chatActivity extends AppCompatActivity {
                                         messages.add(msg);
                                         adapter.setList(messages);
 
-                                        sendNotification(message);
+                                        sendNotification(message, "1");
                                     }
                                     else{
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -280,18 +280,21 @@ public class chatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), voicecallActivity.class);
+                intent.putExtra("name", recvName.getText().toString());
+                sendNotification("Audio Calling...", "0");
 //                intent.setData(Uri.parse("tel:" + contactNumber));
                 startActivity(intent);
             }
         });
-        video_call_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), IncomingCall.class);
-//                intent.setData(Uri.parse("tel:" + contactNumber));
-                startActivity(intent);
-            }
-        });
+//        video_call_icon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), IncomingCall.class);
+//                sendNotification("Video Calling...");
+////                intent.setData(Uri.parse("tel:" + contactNumber));
+//                startActivity(intent);
+//            }
+//        });
     }
 
 
@@ -507,7 +510,7 @@ public class chatActivity extends AppCompatActivity {
                                         messages.add(msg);
                                         adapter.setList(messages);
 
-                                        sendNotification("Image");
+                                        sendNotification("Image", "1");
                                     }
                                     else{
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -613,7 +616,7 @@ public class chatActivity extends AppCompatActivity {
                             messages.add(msg);
                             adapter.setList(messages);
 
-                            sendNotification("Recording");
+                            sendNotification("Recording", "1");
                         }
                         else{
                             Toast.makeText(chatActivity.this,obj.getString("msg"), Toast.LENGTH_LONG).show();
@@ -668,7 +671,7 @@ public class chatActivity extends AppCompatActivity {
         return this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MICROPHONE);
     }
 
-    public void sendNotification(String message){
+    public void sendNotification(String message, String isMessageNotification){
         JSONObject json = null;
         try {
             json= new JSONObject("{'app_id':'0ea59906-b1a9-4034-b5be-c0f50eba5c9b'," +
@@ -676,6 +679,8 @@ public class chatActivity extends AppCompatActivity {
                     "'contents': { 'en' : '"+message+"' } ," +
                     " 'headings' :{'en':'Message From "+user.getName()+"'} }");
             json.put("large_icon", "https://chitchatsmd.000webhostapp.com/Images/" + user.getProfileUrl());
+            json.put("data", new JSONObject("{'contactID':'"+contactID+"','name':'"+recvName.getText().toString()+"','profileUrl':'"+contactID+".jpg'" +
+                    ",'isMessageNotification':'"+isMessageNotification+"'}"));
 
         } catch (JSONException e) {
             e.printStackTrace();

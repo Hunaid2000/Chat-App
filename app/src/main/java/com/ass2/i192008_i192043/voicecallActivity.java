@@ -5,10 +5,12 @@ import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class voicecallActivity extends AppCompatActivity {
 
     ImageView hangupButton;
+    TextView textViewRemoteUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +18,8 @@ public class voicecallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voicecall);
         hangupButton = findViewById(R.id.hangupButton);
+        textViewRemoteUser = findViewById(R.id.remoteUser);
+        textViewRemoteUser.setText(getIntent().getStringExtra("name"));
         hangupButton.setOnClickListener(v -> {
             finish();
         });

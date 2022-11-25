@@ -32,7 +32,7 @@ public class IncomingCall extends BaseActivity {
         SwipeButton decline = findViewById(R.id.reject_swipe_btn);
         profile_image=findViewById(R.id.incoming_profile_image);
         textViewRemoteUser=findViewById(R.id.remoteUser);
-
+        textViewRemoteUser.setText(getIntent().getStringExtra("name"));
         callState.setText("Incoming Voice Call");
 
         mAudioPlayer = new AudioPlayer(this);

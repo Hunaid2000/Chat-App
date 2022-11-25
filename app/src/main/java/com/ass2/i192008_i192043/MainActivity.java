@@ -11,10 +11,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.onesignal.OSNotificationOpenedResult;
 import com.onesignal.OneSignal;
+
+import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity {
     Animation topAnm, bottomAnm;
@@ -22,11 +27,44 @@ public class MainActivity extends AppCompatActivity {
     TextView logoText;
     User currentUser;
     private static final String ONESIGNAL_APP_ID = "0ea59906-b1a9-4034-b5be-c0f50eba5c9b";
-
+    private boolean isNotificationOpened = false;
     private static final int SPLASH_SCREEN= 3000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        OneSignal.setNotificationOpenedHandler(
+            new OneSignal.OSNotificationOpenedHandler() {
+                @Override
+                public void notificationOpened(OSNotificationOpenedResult result) {
+                    String name=null, contactID=null, profileUrl=null, isMessageNotification=null;
+                    try {
+                        isMessageNotification = result.getNotification().getAdditionalData().getString("isMessageNotification");
+                        if(isMessageNotification.equals("1")){
+                            name = result.getNotification().getAdditionalData().getString("name");
+                            contactID = result.getNotification().getAdditionalData().getString("contactID");
+                            profileUrl = result.getNotification().getAdditionalData().getString("profileUrl");
+                            Intent intent = new Intent(MainActivity.this, chatActivity.class);
+                            intent.putExtra("name", name);
+                            intent.putExtra("contactID", contactID);
+                            intent.putExtra("contactImg", profileUrl);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            isNotificationOpened = true;
+                            startActivity(intent);
+                        }
+                        else {
+                            name = result.getNotification().getAdditionalData().getString("name");
+                            Intent intent = new Intent(MainActivity.this, IncomingCall.class);
+                            intent.putExtra("name", name);
+                            isNotificationOpened = true;
+                            startActivity(intent);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    finish();
+                }
+            });
         getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.black));
         setContentView(R.layout.activity_main);
         loadUser();
@@ -47,22 +85,25 @@ public class MainActivity extends AppCompatActivity {
         // Assign the animation
         logo_image.setAnimation(topAnm);
         logoText.setAnimation(bottomAnm);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent;
-                if (currentUser != null) {
-                    // intent to the main player activity
-                    intent = new Intent(MainActivity.this, contactsActivity.class);
-                }else{
-                    // intent to the login activity
-                    intent = new Intent(MainActivity.this, SigninActivity.class);
+        if(!isNotificationOpened){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent;
+                    if (currentUser != null) {
+                        // intent to the main player activity
+                        intent = new Intent(MainActivity.this, contactsActivity.class);
+                    }else{
+                        // intent to the login activity
+                        intent = new Intent(MainActivity.this, SigninActivity.class);
 
+                    }
+                    startActivity(intent);
+                    finish();
                 }
-                startActivity(intent);
-                finish();
-            }
-        },SPLASH_SCREEN);
+            },SPLASH_SCREEN);
+        }
+
     };
 
 
