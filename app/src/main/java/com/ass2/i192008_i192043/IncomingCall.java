@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 //import com.ebanx.swipebtn.OnStateChangeListener;
 //import com.ebanx.swipebtn.SwipeButton;
@@ -33,6 +34,7 @@ public class IncomingCall extends BaseActivity {
     private String mCallId;
     private AudioPlayer mAudioPlayer;
 
+
     public static final String ACTION_ANSWER = "answer";
     public static final String ACTION_IGNORE = "ignore";
     public static final String EXTRA_ID = "id";
@@ -48,6 +50,8 @@ public class IncomingCall extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incomingcall);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+
         TextView callState=findViewById(R.id.callState);
 //        SwipeButton answer = findViewById(R.id.accept_swipe_btn);
 //        SwipeButton decline = findViewById(R.id.reject_swipe_btn);

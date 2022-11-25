@@ -8,6 +8,7 @@ import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,25 +30,16 @@ public class AudioPlayer {
     }
 
     public void playRingtone() {
-        AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-
-        // Honour silent mode
-        switch (audioManager.getRingerMode()) {
-            case AudioManager.RINGER_MODE_NORMAL:
-                mPlayer = new MediaPlayer();
-                mPlayer.setAudioStreamType(AudioManager.STREAM_RING);
-
-                try {
-                    mPlayer.setDataSource(mContext, Uri.parse("https://chitchatsmd.000webhostapp.com/ChatRecordings/phone_loud1.mp3"));
-                    mPlayer.prepare();
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "Could not setup media player for ringtone");
-                    mPlayer = null;
-                    return;
-                }
-                mPlayer.setLooping(true);
-                mPlayer.start();
-                break;
+        mPlayer = new MediaPlayer();
+        try {
+            mPlayer.setDataSource("https://chitchatsmd.000webhostapp.com/ChatRecordings/ringtone1.mp3");
+            mPlayer.prepare();
+            mPlayer.setLooping(true);
+            mPlayer.start();
+            Toast.makeText(mContext, "Playing Recording", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(mContext, "Error in playing", Toast.LENGTH_SHORT).show();
         }
     }
 
