@@ -122,9 +122,43 @@ public class SignupActivity extends AppCompatActivity {
                                     if(obj.getInt("code")==1)
                                     {
                                         user.setUserId(String.valueOf(obj.getInt("id")));
-                                        user.setPlayerid(obj.getString("playerid"));
-                                        // set the current user
                                         uploadUserImage(user.getUserId());
+
+                                        OneSignal.setExternalUserId(user.getUserId(), new OneSignal.OSExternalUserIdUpdateCompletionHandler() {
+                                            @Override
+                                            public void onSuccess(JSONObject results) {
+                                                try {
+                                                    if (results.has("push") && results.getJSONObject("push").has("success")) {
+                                                        boolean isPushSuccess = results.getJSONObject("push").getBoolean("success");
+                                                        OneSignal.onesignalLog(OneSignal.LOG_LEVEL.VERBOSE, "Set external user id for push status: " + isPushSuccess);
+                                                    }
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                try {
+                                                    if (results.has("email") && results.getJSONObject("email").has("success")) {
+                                                        boolean isEmailSuccess = results.getJSONObject("email").getBoolean("success");
+                                                        OneSignal.onesignalLog(OneSignal.LOG_LEVEL.VERBOSE, "Set external user id for email status: " + isEmailSuccess);
+                                                    }
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                try {
+                                                    if (results.has("sms") && results.getJSONObject("sms").has("success")) {
+                                                        boolean isSmsSuccess = results.getJSONObject("sms").getBoolean("success");
+                                                        OneSignal.onesignalLog(OneSignal.LOG_LEVEL.VERBOSE, "Set external user id for sms status: " + isSmsSuccess);
+                                                    }
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(OneSignal.ExternalIdError error) {
+                                                OneSignal.onesignalLog(OneSignal.LOG_LEVEL.VERBOSE, "Set external user id done with error: " + error.toString());
+                                            }
+                                        });
                                     }
                                     else{
                                         Toast.makeText(SignupActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();

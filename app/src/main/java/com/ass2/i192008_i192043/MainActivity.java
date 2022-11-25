@@ -30,17 +30,11 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.black));
         setContentView(R.layout.activity_main);
         loadUser();
-//        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
-//
-//        // OneSignal Initialization
-//        OneSignal.initWithContext(this);
-//        OneSignal.setAppId(ONESIGNAL_APP_ID);
-//
-//        // promptForPushNotifications will show the native Android notification permission prompt.
-//        // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
-//        OneSignal.promptForPushNotifications();
-//
-//        System.out.println("Contact ID: " + OneSignal.getDeviceState().getUserId());
+
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+        OneSignal.initWithContext(this);
+        OneSignal.setAppId(ONESIGNAL_APP_ID);
+        OneSignal.promptForPushNotifications();
 
         // Animation
         topAnm   = AnimationUtils.loadAnimation(this,R.anim.top_animation);
@@ -72,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    public void   loadUser(){
+    public void  loadUser(){
         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
         String userId = sharedPreferences.getString("id", null);
         // if user is not logged in

@@ -32,6 +32,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jraska.falcon.Falcon;
@@ -97,7 +98,6 @@ public class chatActivity extends AppCompatActivity {
         recvName.setText(getIntent().getStringExtra("name"));
         contactID = getIntent().getStringExtra("contactID");
         String recvProfileUrl = getIntent().getStringExtra("contactImg");
-        String playerid = getIntent().getStringExtra("playerid");
         screen_shot= findViewById(R.id.screen_shot); //added
 
         try {
@@ -215,33 +215,6 @@ public class chatActivity extends AppCompatActivity {
                                         msg.setText("");
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
 
-//                                        JSONObject json = null;
-//                                        try {
-//                                            json= new JSONObject("{ 'include_player_ids': [ '" + playerid + "' ]," +
-//                                                    "'contents': { 'en' : '"+message+"' } ," +
-//                                                    " 'headings' :{'en':'Message'} }");
-//
-//                                            System.out.println("json: "+json);
-//
-//                                        } catch (JSONException e) {
-//                                            e.printStackTrace();
-//
-//                                            Toast.makeText(chatActivity.this,"JSON Error",Toast.LENGTH_LONG).show();
-//                                        }
-//
-//                                        OneSignal.postNotification(json, new OneSignal.PostNotificationResponseHandler() {
-//                                            @Override
-//                                            public void onSuccess(JSONObject jsonObject) {
-//                                                Toast.makeText(chatActivity.this,"Notification sent",Toast.LENGTH_LONG).show();
-//                                            }
-//
-//                                            @Override
-//                                            public void onFailure(JSONObject jsonObject) {
-//                                                Toast.makeText(chatActivity.this,"Notification Not sent",Toast.LENGTH_LONG).show();
-//
-//                                            }
-//                                        });
-
                                         Message msg = new Message();
                                         msg.setMessageId(obj.getString("id"));
                                         msg.setMessagetxt(message);
@@ -251,6 +224,8 @@ public class chatActivity extends AppCompatActivity {
                                         msg.setMsgtype("1");
                                         messages.add(msg);
                                         adapter.setList(messages);
+
+                                        sendNotification(message);
                                     }
                                     else{
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -523,6 +498,8 @@ public class chatActivity extends AppCompatActivity {
                                         msg.setMsgtype("2");
                                         messages.add(msg);
                                         adapter.setList(messages);
+
+                                        sendNotification("Image");
                                     }
                                     else{
                                         Toast.makeText(chatActivity.this,obj.get("msg").toString(), Toast.LENGTH_LONG).show();
@@ -627,6 +604,8 @@ public class chatActivity extends AppCompatActivity {
                             msg.setMsgtype("3");
                             messages.add(msg);
                             adapter.setList(messages);
+
+                            sendNotification("Recording");
                         }
                         else{
                             Toast.makeText(chatActivity.this,obj.getString("msg"), Toast.LENGTH_LONG).show();
@@ -679,6 +658,47 @@ public class chatActivity extends AppCompatActivity {
 
     private boolean isMicrophoneAvailable() {
         return this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MICROPHONE);
+    }
+
+    public void sendNotification(String message){
+        JSONObject json = null;
+        try {
+            json= new JSONObject("{'app_id':'0ea59906-b1a9-4034-b5be-c0f50eba5c9b'," +
+                    "'include_external_user_ids': [ '" + contactID + "' ]," +
+                    "'contents': { 'en' : '"+message+"' } ," +
+                    " 'headings' :{'en':'Message From "+user.getName()+"'} }");
+            json.put("large_icon", "https://chitchatsmd.000webhostapp.com/Images/" + user.getProfileUrl());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(chatActivity.this,"JSON Error",Toast.LENGTH_LONG).show();
+        }
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, "https://onesignal.com/api/v1/notifications", json, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                //now handle the response
+                Toast.makeText(chatActivity.this,  "Notification Sent", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //handle the error
+                Toast.makeText(chatActivity.this, "Notification Not Sent", Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+            }
+        })
+        {    //adding header to the request
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", "Basic OGNlYzkyZmQtOWI4Ni00ZWM4LTk2MjMtZTY2MTAwMTQwYTg2");
+                params.put("Content-type", "application/json");
+                return params;
+            }
+        };
+        RequestQueue queue= Volley.newRequestQueue(chatActivity.this);
+        queue.add(jsonRequest);
     }
 
 }
